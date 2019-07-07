@@ -155,6 +155,42 @@ call.mute()
 call.unMute()
 ```
 
+### Transfering call
+
+#### To blind transfer call
+
+To blind transfer call to another user, the call must be held first. Then `transferCall' method can be called by passing callee address as a parameter.
+
+```java
+call.transferCall(calleeAddress)
+```
+This type of transfer can be used if the user do not need to speak to the the user who receives transfer call. When the operation succeeds, the call disposes on the user who starts transferring call.
+The user who receives transfer call can get caller address by using `getCallerAddres` method when the call notification is received. Likewise, the user who transferred can get address of callee by using `getCalleeAddress`. These methods should be called using call object.
+
+```java
+call.getCallerAddress
+call.getCalleeAddress
+```
+
+Caller and callee address changes can be listened using `addPropertyChangeListener`.
+
+```java
+call.addPropertyChangeListener(ChangeListenerKey.CALLEE_ADDRESS, new PropertyChangeListener() {
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        newCalleeAddress = (String) propertyChangeEvent.getNewValue();
+    }
+});
+
+call.addPropertyChangeListener(ChangeListenerKey.CALLER_ADDRESS, new PropertyChangeListener() {
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        newCallerAddress = (String) propertyChangeEvent.getNewValue();
+    }
+});
+```
+
+
 ## Anonymous Calls
 
 $KANDY$ offers to make voice and video calls even if the application user does not have a $KANDY$ account to login. This functionality is called as Anonymous Call on $KANDY$ system. Anonymous call feature can be useful for applications such as customer service support. Since the application user does not have a $KANDY$ account, only an outgoing call can be made to a registered $KANDY$ user. An anonymous user cannot receive and incoming call with this feature.

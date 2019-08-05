@@ -190,6 +190,51 @@ call.addPropertyChangeListener(ChangeListenerKey.CALLER_ADDRESS, new PropertyCha
 });
 ```
 
+#### To Consultative Transfer
+
+Use `consultativeTransfer` method for transferring current call to the transfer target given with another call session in a consultative transfer manner. Transferrer should be participant of both calls in order to make consultative transfer.
+
+When call is transferred, transferrer will leave the calls.
+
+##### Example: Consultative transfer
+
+```java
+public void consultativeTransferExample(CallInterface call, CallInterface targetSession) {
+  //both calls (call and targetSession) should be on HOLD or Double-HOLD state before the transfer operation
+  call.consultativeTransfer(targetSession);
+}
+
+@Override
+public void transferCallSucceed(CallInterface call) {
+  //called when transfer succeeds
+  Log.i("Call", "Transfer is OK");
+}
+
+@Override
+public void transferCallFailed(CallInterface call, MobileError error) {
+  //called when transfer fails
+  Log.e("Call", "Transfer failed : " + error.getErrorMessage());
+}
+```
+
+Caller and callee address changes can be listened using `addPropertyChangeListener`.
+
+```java
+call.addPropertyChangeListener(ChangeListenerKey.CALLEE_ADDRESS, new PropertyChangeListener() {
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        newCalleeAddress = (String) propertyChangeEvent.getNewValue();
+    }
+});
+
+call.addPropertyChangeListener(ChangeListenerKey.CALLER_ADDRESS, new PropertyChangeListener() {
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        newCallerAddress = (String) propertyChangeEvent.getNewValue();
+    }
+});
+
+```
 
 ## Anonymous Calls
 

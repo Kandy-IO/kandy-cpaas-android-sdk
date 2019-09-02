@@ -5,6 +5,12 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 1.9.0 - 2019-09-02
+
+### Fixed
+- Media problem when switching between two calls on Music-on-Hold is fixed `KAE-410`
+
+
 ## 1.8.0 - 2019-08-05
 
 ### Added

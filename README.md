@@ -9,6 +9,10 @@ Compatible Android OS versions :
 
 * Android 5.0 - Android 10.0
 
+Tested on :
+
+* Nexus 5, Samsung Note 3, Samsung Note 5, Samsung S7, LG G2, LG G3, LG G5, LG G6, HTC Desire 626, HTC One A9, HTC 10, SONY XPERIA Z5, SONY XPERIA XZ, General Mobile GM 5+
+
 ## Reference
 
 The information about tutorials and documents can be found in the links below

@@ -1,10 +1,32 @@
 # Kandy CPaaS Android SDK
 
-SDK jar file and WebRTC libraries for `armeabi`, `arm64-v8a` and `x86` architectures can be found in the
-[SDK collection](https://github.com/Kandy-IO/kandy-cpaas-android-sdk/tree/master/dist).
+## Installation
+To integrate Cpass Android SDK to your project add gradle dependencies as described in above.
 
-MD5 Checksum for SDK collection : 8362a87b52056b96e6a07d06ffe31e68
+### Step 1
+Add Cpass Android SDK Maven url to your root level `build.gradle` file.
+```
+allprojects {
+    repositories {
+    ....
+        maven {
+            url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/releases/dist/"
+        }   
+    }
+    ...
+}
+```
 
+### Step 2
+Add dependcy of Cpass Android SDK to your app level `build.gradle` file.
+
+```
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.0.0'
+```
+
+That's all! You can use Cpass Android SDK after you sync gradle.
+
+## Compatibility
 Compatible Android OS versions :
 
 * Android 5.0 - Android 10.0

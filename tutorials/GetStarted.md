@@ -9,6 +9,30 @@
 
 This section provides an example of creating your Android project and using the $KANDY$ Mobile SDK in your project. Android Studio 3.1.3 is used for this example, but you may use your development environment of choice to create your project.
 
+## Base URL
+
+This is the API Marketplace HTTPS entry point that you will use for authentication, REST services and WebSocket notifications.
+
+```
+$KANDYFQDN$
+```
+
+## ICE Servers
+
+Use these primary and secondary URIs as the ICE Servers in the JavaScript, iOS or Android SDKs configuration when connecting and making calls. This is needed in order to ensure that calls can be established even the call peers are on different networks, behind firewalls. When the ICE server connects, it will try the Primary URL first. If that fails, it will try the Secondary URL.
+
+#### Primary URL:
+
+```
+$KANDYICE1$
+```
+
+#### Secondary URL:
+
+```
+$KANDYICE2$
+```
+
 ## Creating the Android project
 
 The following procedure uses Android Studio IDE to illustrate adding the Mobile SDK library file to the Android application's build path.

@@ -32,42 +32,12 @@ The first step for any application that will use the $KANDY$ Mobile SDK is setti
 Configuration configuration = Configuration.getInstance();
 configuration.setUseSecureConnection(true);
 configuration.setRestServerUrl("cpaasapi.example.com");
-configuration.setRestServerPort(restServerPort);
-```
 
-### Example Configurations
-
-#### Call
-
-The Call configs are used to initialize call/network settings and to set the starting behavior of a call.
-
-```java
-Configuration configuration = Configuration.getInstance();
-configuration.setEarlyMediaEnabled(false);
-configuration.setAuditFrequence(30);
-```
-
-#### WebRTC
-
-The WebRTC configs are used to customize the advanced behavior of the SDK, like providing ICE Servers and corresponding options, setting custom set of video and audio codecs, enabling or disabling encryption options of the WebRTC etc.
-
-```java
-Configuration configuration = Configuration.getInstance();
-configuration.setDTLS(true);
-configuration.setIceOption(ICEOptions.ICE_VANILLA);
-configuration.setICECollectionTimeout(1);
-
-// Setting custom ICE Servers
+// Setting ICE Servers
 ICEServers iceServers = new ICEServers();
 iceServers.addICEServer("turns:turn-example.com:443?transport=tcp");
 iceServers.addICEServer("turn:turn-example.com:3535?transport=udp");
 configuration.setICEServers(iceServers);
-
-// Setting specific codecs, by default all codecs are in use
-CodecSet codecSet = new CodecSet();
-codecSet.audioCodecs = new CodecSet.AudioCodecType[]{CodecSet.AudioCodecType.AC_G722, CodecSet.AudioCodecType.AC_OPUS};
-codecSet.videoCodecs = new CodecSet.VideoCodecType[]{CodecSet.VideoCodecType.VC_H264, CodecSet.VideoCodecType.VC_VP9};
-configuration.setPreferredCodecSet(codecSet);
 ```
 
 #### Capturing Logs and Troubleshooting Problems

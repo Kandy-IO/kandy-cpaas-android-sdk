@@ -7,7 +7,7 @@
 ---
 # Get Started
 
-This section provides an example of creating your Android project and using the $KANDY$ Mobile SDK in your project. Android Studio 3.1.3 is used for this example, but you may use your development environment of choice to create your project.
+This section provides an example of creating your Android project and using the $KANDY$ Mobile SDK in your project. Android Studio 3.4.2 is used for this example, but you may use your development environment of choice to create your project.
 
 ## Creating the Android project
 
@@ -46,52 +46,92 @@ For the target SDK version, Google suggests to set API Level 26 or higher. Targe
 
 ![alt text](img/get_started_5.png "")
 
-<br>
-7. Copy the Mobile SDK jar file (“CPaaSSDK_x.x.x.jar") under your MobileSDKDemo's **libs** folder.
 
+
+### Adding MobileSDK dependency to your project
+
+There are 2 option to add MobileSDK dependency to your project. You can add MobileSDK dependency from github repository or you can add it your project manually. This document will explain both options in detail. 
+
+
+#### Adding MobileSDK dependency to your project from GitHub repository
+1. Add MobileSDK repository url to your root level **build.gradle** file. 
+
+
+	```
+	allprojects {
+    	repositories {
+        	google()
+        	jcenter()
+
+        	maven {
+         	  url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/master/dist/"
+        	}
+   		}
+	}
+	```
+	
 ![alt text](img/get_started_6.png "")
 
-<br>
+2. Add dependcy of MobileSDK to your app level **build.gradle** file.
 
-8. In “CPaaSSDK-x.x.x.zip”, along with the “CPaaSSDK_x.x.x.jar", you will also find native WebRTC library called "libjingle_peerconnection_so.so", compiled for different architectures. In Android projects the ones in “armeabi” and "arm64-v8a" folders will be used.
- Move those folders named under the **libs** folder in the project along with the "libjingle_peerconnection_so.so" files, described above, inside them.
+	```
+	implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}'
 
-![alt text](img/get_started_7.png "")
+	```
 
-<br>
+	![alt text](img/get_started_7.png "")
 
-9. Open **build.gradle** file, located under **app** module of **MobileSDKDemo** project. Add the configuration script below to the file, in order the application to locate libjingle library (and other JNI libraries if used in the application).
+	---
+	**NOTE**
 
-```
-android {
-    .
-    .
-    .
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
-}
-```
+	Check latest version of MobileSDK from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk). 
 
-![alt text](img/get_started_8.png "")
+	---
 
-<br>
 
-10. An Android application project must be compatible with Java 8 when it is using Mobile SDK library. This necessity comes from the WebRTC library, its code is dependent on some Java 8 features. In order to set this compliance, open **build.gradle** file, located under **app** module of **MobileSDKDemo** project. Add the configuration script below to the file.
+#### Adding MobileSDK dependency to your project manually
 
-```
-android {
-    .
-    .
-    .
-    compileOptions {
+
+1. Download latest MobileSDK version from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk) and copy **aar** file to your project **lib** folder.
+
+ ![alt text](img/get_started_8.png "")
+
+
+2. After that you need to inform gradle that your app will use manual aar files. To do that add **flatDir** path to your root level **build.gradle** file as in the example above.
+
+	```
+	flatDir {
+       dirs 'libs'
+   }
+	```
+ ![alt text](img/get_started_12.png "")
+
+3. Add dependcy of MobileSDK to your app level **build.gradle** file with **@aar** prefix.
+
+	```
+	implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}@aar'
+
+	```
+
+	![alt text](img/get_started_13.png "")
+
+
+### Adding Java 8 support
+ An Android application project must be compatible with Java 8 when it is using Mobile SDK library. This necessity comes from the WebRTC library, its code is dependent on some Java 8 features. In order to set this compliance, open **build.gradle** file, located under **app** module of **MobileSDKDemoApp** project. Add the configuration script below to the file.
+
+	```	
+	android{
+		compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
-}
-```
+	}
+	```
+	
+![alt text](img/get_started_14.png "")
+
+
+
 
 ## Using the $KANDY$ Mobile SDK in the Android project
 

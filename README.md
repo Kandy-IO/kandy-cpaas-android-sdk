@@ -10,7 +10,7 @@ allprojects {
     repositories {
     ....
         maven {
-            url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/releases/dist/"
+            url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/master/dist/"
         }   
     }
     ...

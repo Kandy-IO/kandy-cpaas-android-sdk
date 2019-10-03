@@ -7,7 +7,7 @@ CPaaS Android SDK change log.
 
 
 
-## 2.0.0 - 2019-09-30
+## 2.0.0 - 2019-10-03
 
 ### Added
 

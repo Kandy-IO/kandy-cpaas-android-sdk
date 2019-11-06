@@ -5,20 +5,21 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.1.0 - 2019-11-04
+
+### Added
+- Three-Way Call feature implemented `KAE-87`
+
+### Fixed
+- Default value for codec preferrence is set to reflect WebRTC default codec behavior `KAE-538`
 
 
 ## 2.0.0 - 2019-10-03
 
 ### Added
-
 - Mobile SDK Distribution on Maven `KAE-425`
 - Unified Plan Support `KAE-200`
 
-### Fixed
-
-- Helper text displays incorrectly when adding a new member to Group chat `KAE-505`
-- Bad UI when user attaches and send a multimedia file `KAE-343`
-- Fixing Unified Plan Interoperability Issues `KAE-494`
 
 ## 1.9.0 - 2019-09-02
 

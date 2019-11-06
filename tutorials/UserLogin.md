@@ -31,12 +31,12 @@ The first step for any application that will use the $KANDY$ Mobile SDK is setti
 ```java
 Configuration configuration = Configuration.getInstance();
 configuration.setUseSecureConnection(true);
-configuration.setRestServerUrl("cpaasapi.example.com");
+configuration.setRestServerUrl("$KANDYFQDN$");
 
 // Setting ICE Servers
 ICEServers iceServers = new ICEServers();
-iceServers.addICEServer("turns:turn-example.com:443?transport=tcp");
-iceServers.addICEServer("turn:turn-example.com:3535?transport=udp");
+iceServers.addICEServer("$KANDYICE1$");
+iceServers.addICEServer("$KANDYICE2$");
 configuration.setICEServers(iceServers);
 ```
 

@@ -38,6 +38,7 @@ $KANDYICE2$
 The following procedure uses Android Studio IDE to illustrate adding the Mobile SDK library file to the Android application's build path.
 
 1. Open the development environment (in this example, Android Studio).
+
 2. Click **Start a new Android Studio project**.
 
 ![alt text](img/get_started_1.png "")
@@ -70,92 +71,80 @@ For the target SDK version, Google suggests to set API Level 26 or higher. Targe
 
 ![alt text](img/get_started_5.png "")
 
-
-
 ### Adding MobileSDK dependency to your project
 
-There are 2 option to add MobileSDK dependency to your project. You can add MobileSDK dependency from github repository or you can add it your project manually. This document will explain both options in detail. 
+There are 2 option to add MobileSDK dependency to your project. You can add MobileSDK dependency from github repository or you can add it your project manually. This document will explain both options in detail.
 
+#### Adding the dependency from GitHub repository
 
-#### Adding MobileSDK dependency to your project from GitHub repository
-1. Add MobileSDK repository url to your root level **build.gradle** file. 
+1. Add MobileSDK repository url to your root level **build.gradle** file.
 
+```
+allprojects {
+  repositories {
+    google()
+    jcenter()
 
-	```
-	allprojects {
-    	repositories {
-        	google()
-        	jcenter()
+    maven {
+      url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/master/dist/"
+    }
+  }
+}
+```
 
-        	maven {
-         	  url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/master/dist/"
-        	}
-   		}
-	}
-	```
-	
 ![alt text](img/get_started_6.png "")
 
 2. Add dependcy of MobileSDK to your app level **build.gradle** file.
 
-	```
-	implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}'
+```
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}'
+```
 
-	```
+![alt text](img/get_started_7.png "")
 
-	![alt text](img/get_started_7.png "")
+<div style="border-style:solid; page-break-inside: avoid;">
+<h5>NOTE</h5>
+Check latest version of MobileSDK from <a href="https://github.com/Kandy-IO/kandy-cpaas-android-sdk">GitHub</a>.
+</div>
+<br>
 
-	---
-	**NOTE**
-
-	Check latest version of MobileSDK from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk). 
-
-	---
-
-
-#### Adding MobileSDK dependency to your project manually
-
+#### Adding the dependency manually
 
 1. Download latest MobileSDK version from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk) and copy **aar** file to your project **lib** folder.
 
- ![alt text](img/get_started_8.png "")
-
+![alt text](img/get_started_8.png "")
 
 2. After that you need to inform gradle that your app will use manual aar files. To do that add **flatDir** path to your root level **build.gradle** file as in the example above.
 
-	```
-	flatDir {
-       dirs 'libs'
-   }
-	```
- ![alt text](img/get_started_12.png "")
+```
+flatDir {
+  dirs 'libs'
+}
+```
+
+![alt text](img/get_started_12.png "")
 
 3. Add dependcy of MobileSDK to your app level **build.gradle** file with **@aar** prefix.
 
-	```
-	implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}@aar'
+```
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}@aar'
+```
 
-	```
-
-	![alt text](img/get_started_13.png "")
-
+![alt text](img/get_started_13.png "")
 
 ### Adding Java 8 support
- An Android application project must be compatible with Java 8 when it is using Mobile SDK library. This necessity comes from the WebRTC library, its code is dependent on some Java 8 features. In order to set this compliance, open **build.gradle** file, located under **app** module of **MobileSDKDemoApp** project. Add the configuration script below to the file.
+An Android application project must be compatible with Java 8 when it is using Mobile SDK library. This necessity comes from the WebRTC library, its code is dependent on some Java 8 features. In order to set this compliance, open **build.gradle** file, located under **app** module of **MobileSDKDemoApp** project. Add the configuration script below to the file.
 
-	```	
-	android{
-		compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
-	}
-	```
-	
+```
+android{
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+}
+```
+
 ![alt text](img/get_started_14.png "")
-
-
-
 
 ## Using the $KANDY$ Mobile SDK in the Android project
 
@@ -275,9 +264,9 @@ public class MainActivity extends Activity {
 8. Set $KANDY$ configurations for connection.
 
 ```java
-Configuration.getInstance().setUseSecureConnection(useSecureConnection);
-Configuration.getInstance().setRestServerUrl(restServerUrl);
-Configuration.getInstance().setRestServerPort(restServerPort);
+Configuration.getInstance().setUseSecureConnection(true);
+Configuration.getInstance().setRestServerUrl("$KANDYFQDN$");
+Configuration.getInstance().setRestServerPort(443);
 }
 ```
 

@@ -13,6 +13,9 @@ CPaaS Android SDK change log.
 ### Fixed
 - Default value for codec preferrence is set to reflect WebRTC default codec behavior `KAE-538`
 
+### Deprecated
+- `CallService.createOutgoingCall(String, CallApplicationListener, OutgoingCallCreationCallback)` and `CallService.createOutgoingCall(String, String, CallApplicationListener, OutgoingCallCreationCallback)` methods are deprecated and will be removed in future releases, since `CallApplicationListener` can already be set to CallService via a setter method. Instead `CallService.createOutgoingCall(String, OutgoingCallCreationCallback)` and `CallService.createOutgoingCall(String, String, OutgoingCallCreationCallback)` should be used.
+
 
 ## 2.0.0 - 2019-10-03
 

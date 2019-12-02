@@ -5,6 +5,13 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.2.0 - 2019-12-02
+
+### Added
+- WebRTC stack upgraded to version M78 `KAE-507`
+- Custom CPaaS Agent HTTP Header is implemented `KAE-524`
+
+
 ## 2.1.0 - 2019-11-04
 
 ### Added

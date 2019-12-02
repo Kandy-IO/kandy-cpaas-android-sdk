@@ -1,30 +1,34 @@
 # Kandy CPaaS Android SDK
 
 ## Installation
-To integrate Kandy CPaaS Android SDK to your project add gradle dependencies as described in above.
+To integrate Kandy CPaaS Android SDK to your project add gradle dependencies as described below.
 
 ### Step 1
-Add Kandy CPaaS Android SDK Maven url to your root level `build.gradle` file.
+Add Kandy CPaaS Android SDK maven repository url to your root level `build.gradle` file.
+
 ```
 allprojects {
-    repositories {
+  ...
+  repositories {
     ...
-        maven {
-            url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/master/dist/"
-        }
+    maven {
+      url "https://raw.githubusercontent.com/Kandy-IO/kandy-cpaas-android-sdk/master/dist/"
     }
-    ...
+  }
 }
 ```
 
 ### Step 2
-Add dependcy of Cpass Android SDK to your app level `build.gradle` file.
+Add dependency of Kandy CPaaS Android SDK to your app level `build.gradle` file.
 
 ```
-implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.0.0'
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.2.0'
 ```
 
 That's all! You can use Kandy CPaaS Android SDK after you sync gradle.
+
+## Installation for versions before 2.0.0
+Versions before 2.0.0 will require manual installation. To download an older version, switch to tag of that specific version. Then download the CPaaS_Android_SDK-1.x.x.zip file under "dist" directory.
 
 ## Compatibility
 Compatible Android OS versions :

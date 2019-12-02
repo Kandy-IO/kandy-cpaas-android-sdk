@@ -19,7 +19,7 @@ You can create **OutgoingCall** object by calling **createOutgoingCall** method 
 
 ```java
 
-callService.createOutgoingCall(callee, callApplicationListener, new OutgoingCallCreationCallback() {
+callService.createOutgoingCall(callee, new OutgoingCallCreationCallback() {
             @Override
             public void callCreated(OutgoingCallInterface callInteface) {
                 // Call successfully created, use the CallInterface object to process the call.
@@ -51,8 +51,12 @@ You need to get `callId` to use call events. You can get `callId` by calling `ca
 When $KANDY$ Mobile SDK receives an incoming call, it calls `incomingCall` method in the `CallApplicationListener`. Thus, `CallApplicationListener` should be set to the class where managed. Now, the application should receive incoming call events if any.
 
 ```java
-CallApplicationListener callApplicationListener = new CallApplicationListener();
-callApplicationListener.setContext(applicationContext);
+public class Application implements CallApplicationListener {
+  ...
+}
+
+Application application = ...;
+callService.setCallApplicationListener(application);
 ```
 
 ### Managing Incoming Call

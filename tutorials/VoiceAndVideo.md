@@ -102,6 +102,18 @@ private void rejectIncomingCall() {
 }
 ```
 
+#### Forwarding Incoming Call
+
+An incoming call can be forwarded to another user by calling the `forwardCall` method on the incoming call instance. After a successful invokation of the forward operation, call will be ended on the client which invoked the operation, the user whose address is given to forward operation will receive an incoming call from the originator side.
+
+```java
+private void forwardIncomingCall() {
+  IncomingCall incomingCall = // get from the CallApplicationListener with the callId
+  String targetAddress = // address of the user to whom the call is forwarded
+  incomingCall.forwardCall(targetAddress);
+}
+```
+
 ## Managing Call Events
 
 Methods implemented in the `CallApplicationListener` are notified with the events occurred during the call, or `callStatusChanged` when state of the call is changed. By listening these methods, call events can be managed directly. To see all methods implemented in the `CallApplicationListener`, see API Reference Documents.

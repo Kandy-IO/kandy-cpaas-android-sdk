@@ -5,6 +5,15 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.3.0 - 2020-01-09
+
+### Added
+- Call forward feature `KAE-80`
+
+### Fixed
+- Fixed SMS DID parsing issue during login with project credentials  `KAE-575`
+
+
 ## 2.2.0 - 2019-12-02
 
 ### Added

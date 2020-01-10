@@ -1,5 +1,9 @@
 # Kandy CPaaS Android SDK
 
+<p>
+    <img alt="GitHub release" src="https://img.shields.io/github/v/release/kandy-io/kandy-cpaas-android-sdk">
+</p>
+
 ## Installation
 To integrate Kandy CPaaS Android SDK to your project add gradle dependencies as described below.
 
@@ -22,7 +26,7 @@ allprojects {
 Add dependency of Kandy CPaaS Android SDK to your app level `build.gradle` file.
 
 ```
-implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.2.0'
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.3.0'
 ```
 
 That's all! You can use Kandy CPaaS Android SDK after you sync gradle.

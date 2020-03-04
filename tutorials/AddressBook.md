@@ -7,6 +7,8 @@ $KANDY$ offers set of APIs to store, manage and search contacts through address 
 $KANDY$ Mobile SDK provides and use `Contact` model for all of the Address Book operations. A `Contact` object should contain an unique ID and set of attributes. An unique ID can be provided while constructing and object, but by default $KANDY$ Mobile SDK supplies a default random String.
 
 ```java
+import com.rbbn.cpaas.mobile.addressbook.model.Contact;
+
 Contact contactWithSDKProvidedId = new Contact();
 Contact contactWithExternallyProvidedId = new Contact("hereIsMyUniqueId");
 
@@ -17,6 +19,8 @@ contactWithExternallyProvidedId.getContactId(); // It's "hereIsMyUniqueId"
 A Contact object can contain attributes like primary contact, first name, last name, email address, business phone number, home phone number, mobile number, fax number, pager number and buddy value (All available fields can be found in the `AttributeName` enum). A contact's "primary contact" attribute corresponds to "User Id", which can be used with call, chat and presence services. Each attribute can contain only one value.
 
 ```java
+import com.rbbn.cpaas.mobile.addressbook.model.Contact;
+
 Contact exampleContact = new Contact();
 exampleContact.setPrimaryContact("test@test.com");
 exampleContact.setFirstName("Test");
@@ -190,6 +194,8 @@ $KANDY$ Mobile SDK offers ability to manage address book lists.
 $KANDY$ Mobile SDK provides `addAddressBookList` ability to add `AddressBookList` objects to user's address book lists. `addAddressBookList` operation requires a new `AddressBookList` object with unique list ID.
 
 ```java
+import com.rbbn.cpaas.mobile.addressbook.model.AddressBookList;
+
 AddressBookList exampleList = new AddressBookList();
 // ... setting Contact's attributes
 CPaaS.getAddressBookService().addAddressBookList(exampleList, "default", new AddAddressBookListCallback() {

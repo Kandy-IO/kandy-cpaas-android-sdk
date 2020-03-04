@@ -51,6 +51,7 @@ You need to get `callId` to use call events. You can get `callId` by calling `ca
 When $KANDY$ Mobile SDK receives an incoming call, it calls `incomingCall` method in the `CallApplicationListener`. Thus, `CallApplicationListener` should be set to the class where managed. Now, the application should receive incoming call events if any.
 
 ```java
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class Application implements CallApplicationListener {
   ...
 }
@@ -68,6 +69,8 @@ When `incomingCall` method is notified with the received call, call can be accep
 An incoming call can be accepted by calling the `acceptCall` method on the incoming call instance which is received from `CallApplicationListener`.
 
 ```java
+import com.rbbn.cpaas.mobile.call.IncomingCall;
+
 private void acceptIncomingCall() {
 	IncomingCall incomingCall = // get from the CallApplicationListener with the callId
 	// For video call

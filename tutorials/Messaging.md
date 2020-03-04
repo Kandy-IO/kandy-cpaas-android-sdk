@@ -13,9 +13,12 @@ SMS messaging is managed by the SMS Service which can be called from the `CPaaS`
 
 ### Initialize the SMS Service
 
-In order to use the SMS service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive SMS notifications from the server.
+In order to use the SMS service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive SMS notifications from the server.Note that,phone number should be assigned to the user before using the SMS Service.
 
 ```java
+import com.rbbn.cpaas.mobile.CPaaS;
+import com.rbbn.cpaas.mobile.messaging.sms.api.SMSService;
+
 // build up the list of services for subscriptions
 List<ServiceInfo> services = new ArrayList<>();
 services.add(new ServiceInfo(ServiceType.SMS, true));
@@ -81,6 +84,9 @@ Retrieve a list of relevant conversation objects from the server. Using FetchCri
 Options filter has provided search parameters; max, last message time and is a new message.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.sms.api.FetchCriteria;
+import com.rbbn.cpaas.mobile.messaging.api.FetchOptions;
+
 FetchCriteria criteria = new FetchCriteria();
 criteria.participant("+19725551212");
 
@@ -150,6 +156,9 @@ The Mobile SDK provides the ability to send SMS text messages.
 Send an SMS message from a local address specified by the SMS Service within a list of available numbers to a single destination specified as the conversation participant with message content specified by OutboundMessage. An implementer should specify a MessagingCallback to handle any response whether error or successful response.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.sms.api.SMSConversation;
+import com.rbbn.cpaas.mobile.messaging.OutboundMessage;
+
 String participant = "+19725551212";
 List<String> localAdressList = smsService.getLocalAddressList();
 String localAddress = //choose one address from the list above

@@ -7,31 +7,7 @@
 ---
 # Get Started
 
-This section provides an example of creating your Android project and using the $KANDY$ Mobile SDK in your project. Android Studio 3.4.2 is used for this example, but you may use your development environment of choice to create your project.
-
-## Base URL
-
-This is the API Marketplace HTTPS entry point that you will use for authentication, REST services and WebSocket notifications.
-
-```
-$KANDYFQDN$
-```
-
-## ICE Servers
-
-Use these primary and secondary URIs as the ICE Servers in the JavaScript, iOS or Android SDKs configuration when connecting and making calls. This is needed in order to ensure that calls can be established even the call peers are on different networks, behind firewalls. When the ICE server connects, it will try the Primary URL first. If that fails, it will try the Secondary URL.
-
-#### Primary URL:
-
-```
-$KANDYICE1$
-```
-
-#### Secondary URL:
-
-```
-$KANDYICE2$
-```
+This section provides an example of creating your Android project and using the $KANDY$ Mobile SDK in your project. Android Studio 3.5.2 is used for this example, but you may use your development environment of choice to create your project.
 
 ## Creating the Android project
 
@@ -271,30 +247,40 @@ Configuration.getInstance().setRestServerPort(443);
 ```
 
 <br>
-9. Create a method that gets *"Access Token"* from $KANDY$. Getting access token is explained in *"Getting Access Token from $KANDY$"* section in detail.
+9. Add the following code to gets *"Access And Id Token"* from $KANDY$. Getting access and id token is explained in [**Getting Access and Id Token from $KANDY$**](#getting-access-and-id-token-from-kandy) section in detail.
 
 ```java
-public String getAccessToken(String username, String password) {
-    //get Access token from $KANDY$
-}
+Button getTokenButton=findViewById(R.id.getTokenButton);
+getTokenButton.setOnClickListener(new View.OnClickListener() {
+       @Override
+      public void onClick(View v) {
+        EditText usernameField = findViewById(R.id.username);
+        String username = usernameField.getText().toString();
+        EditText passwordField = findViewById(R.id.password);
+        String password = passwordField.getText().toString();
+        HashMap<String,String> requestMap=new HashMap<>();
+        requestMap.put("username",username);
+        requestMap.put("password",password);
+        requestMap.put("client_id","your_client_id");
+        requestMap.put("grant_type","password");
+        requestMap.put("scope","openid");
+        requestMap.put("client_secret","");
+        new AccessAndIdTokenTask().execute(requestMap);
+       }
+ });
 ```
 
 <br>
 10. Add the following code to login action for establishing connection to $KANDY$.
 
 ```java
+import com.rbbn.cpaas.mobile.CPaaS;
+
 Button loginButton = (Button) findViewById(R.id.login_button);
 loginButton.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-      EditText usernameField = findViewById(R.id.username);
-      String username = usernameField.getText().toString();
-
-      EditText passwordField = findViewById(R.id.password);
-      String password = passwordField.getText().toString();
-
-      String accessToken = getAccessToken(username, password);
-
+    
       int lifetime = 3600; //in seconds
 
       List<ServiceInfo> services = new ArrayList<>();
@@ -303,7 +289,7 @@ loginButton.setOnClickListener(new View.OnClickListener() {
 
       CPaaS cpaas = new CPaaS(services);
 
-      cpaas.getAuthentication().connect(username, accessToken, lifetime, new ConnectionCallback() {
+      cpaas.getAuthentication().connect(YOUR_ID_TOKEN, YOUR_ACCESS_TOKEN, lifetime, new ConnectionCallback() {
                 @Override
                 public void onSuccess(String channelInfo) {
                     // connection is successful
@@ -316,4 +302,86 @@ loginButton.setOnClickListener(new View.OnClickListener() {
       });
     }
 });
+```
+
+## Getting Access And Id Token from $KANDY$
+
+```java
+private class AccessAndIdTokenTask extends AsyncTask<HashMap<String,String>, Void, String> {
+
+        @Override
+        protected String doInBackground(HashMap<String,String>... params) {
+            HashMap<String,String> _requestMap=params[0];
+            String requestUrl = "https://"+BASE_URL+"/cpaas/auth/v1/token";
+
+            return requestAccessAndIdToken(requestUrl, _requestMap.get("username"), _requestMap.get("password"), _requestMap.get("client_id"), _requestMap.get("client_secret"), _requestMap.get("scope"));
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            if (result != null) {
+                parseAccessAndIDTokenResult(result);
+            }
+
+        }
+    }
+    private String requestAccessAndIdToken(String requestUrl, String username, String password,
+                                      String client_id, String client_secret, String scope) {
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(requestUrl);
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            urlConnection.setDoOutput(true);
+
+            OutputStream outputStream = null;
+            try {
+                StringBuilder bodyBuilder = new StringBuilder();
+                bodyBuilder.append("grant_type=password&");
+                bodyBuilder.append("username=").append(username).append("&");
+                bodyBuilder.append("password=").append(password).append("&");
+                bodyBuilder.append("client_id=").append(client_id).append("&");
+                bodyBuilder.append("client_secret=").append(client_secret).append("&");
+                bodyBuilder.append("scope=").append(scope);
+
+                outputStream = urlConnection.getOutputStream();
+                outputStream.write(bodyBuilder.toString().getBytes());
+                outputStream.flush();
+            } finally {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream()));
+
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            return result.toString();
+        } catch (Exception exception) {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return null;
+        }
+    }
+    public  void parseAccessAndIDTokenResult(String result) {
+
+        try {
+            JSONObject tokenJSONObject = new JSONObject(result);
+            YOUR_ACCESS_TOKEN=tokenJSONObject.getString("access_token");
+            YOUR_ID_TOKEN=tokenJSONObject.getString("id_token");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 ```

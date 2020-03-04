@@ -7,6 +7,9 @@ Presence publishing and watching are managed by the Presence Service which can b
 In order to use the Presence service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive presence notifications from the server.
 
 ```java
+import com.rbbn.cpaas.mobile.CPaaS;
+import com.rbbn.cpaas.mobile.presence.api.PresenceService;
+
 // build up the list of services for notification subscriptions
 List<ServiceInfo> services = new ArrayList<>();
 services.add(new ServiceInfo(ServiceType.PRESENCE, true));
@@ -54,6 +57,9 @@ An application publishes the status of a user by creating and updating a Presenc
 Publish the presence activity of the local user by creating new PresenceSource or updating an existing PresenceSource.
 
 ```java
+import com.rbbn.cpaas.mobile.utilities.services.PresenceEnums;
+
+
 presenceService.createPresenceSource(86400, new FetchPresenceSourceCallback() {
 	@Override
 	public void onSuccess(PresenceSource presenceSource) {

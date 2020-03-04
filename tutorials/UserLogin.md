@@ -13,6 +13,8 @@ Mobile SDK needs to know about the application context. Application developers s
 ### Example: Setting application context
 
 ```java
+import com.rbbn.cpaas.mobile.utilities.Globals;
+
 public class ExampleApplication extends Application {
 
     public void onCreate() {
@@ -26,17 +28,50 @@ public class ExampleApplication extends Application {
 
 ## Configurations
 
-The first step for any application that will use the $KANDY$ Mobile SDK is setting the configurations. When doing this, you can customize certain features by providing a configurations object. All feature configurations can be set with instance of the `Configurations` object. Developers should set server related configurations before using any functionality of the SDK and all other customizations are optional.
+The first step for any application that will use the $KANDY$ Mobile SDK is setting the configurations. When doing this, you can customize certain features by providing a configurations object. All feature configurations can be set with instance of the `Configurations` object. Developers should set server related configurations before using any functionality of the SDK and all other customizations are optional.Note that,config should be set before creating a service provider.
+
+### Base URL
+
+This is the API Marketplace HTTPS entry point that you will use for authentication, REST services and WebSocket notifications.
+
+```
+$KANDYFQDN$
+```
+
+### ICE Servers
+
+Use these primary and secondary URIs as the ICE Servers in the JavaScript, iOS or Android SDKs configuration when connecting and making calls. This is needed in order to ensure that calls can be established even the call peers are on different networks, behind firewalls. When the ICE server connects, it will try the Primary URL first. If that fails, it will try the Secondary URL.
+
+##### Primary URL:
+
+```
+$KANDYTURN1$
+
+$KANDYSTUN1$
+```
+
+##### Secondary URL:
+
+```
+$KANDYTURN2$
+
+$KANDYSTUN2$
+```
 
 ```java
+import com.rbbn.cpaas.mobile.utilities.Configuration;
+import com.rbbn.cpaas.mobile.utilities.webrtc.ICEServers;
+
 Configuration configuration = Configuration.getInstance();
 configuration.setUseSecureConnection(true);
 configuration.setRestServerUrl("$KANDYFQDN$");
 
 // Setting ICE Servers
 ICEServers iceServers = new ICEServers();
-iceServers.addICEServer("$KANDYICE1$");
-iceServers.addICEServer("$KANDYICE2$");
+iceServers.addICEServer("$KANDYTURN1$");
+iceServers.addICEServer("$KANDYTURN2$");
+iceServers.addICEServer("$KANDYSTUN1$");
+iceServers.addICEServer("$KANDYSTUN2$");
 configuration.setICEServers(iceServers);
 ```
 
@@ -47,7 +82,7 @@ The log level configs are used to change the severity of logging output from $KA
 $KANDY$ Mobile SDK also provides application developers to set their customized logger implementation into Mobile SDK.
 
 ```java
-class CustomizedLogger extends Logger {
+class CustomizedLogger implements Logger {
     @Override
     public void log(LogLevel loglevel, String tag, String message) {
         // a customized implementation
@@ -67,21 +102,25 @@ configuration.setLogger(new CustomizedLogger());
 
 ## connect(String idToken, int lifetime, ConnectionCallback callback)
 
-Establishes a connection for the user with given ID Token, which will last until the time given with lifetime is elapsed.
+Establishes a connection for the user with given ID Token, which will last until the time given with lifetime is elapsed.Getting access and id token is explained in [**Getting Access and Id Token from $KANDY$**](GetStarted.md#getting-access-and-id-token-from-kandy) section in detail.
 
 Authentication needs access token in order to get and establish Websocket subscription. So before using this method, access token should be given to the Authentication with calling setToken method.
 
 ```java
-cPaaS.getAuthentication().setToken("access_token");
-cpaas.getAuthentication().connect("id_token", 3600, new ConnectionCallback() {
-    public void onSuccess(String connectionToken) {
-        Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
-    }
+ try{
+    cPaaS.getAuthentication().setToken(YOUR_ACCESS_TOKEN);
+    cpaas.getAuthentication().connect(YOUR_ID_TOKEN, 3600, new ConnectionCallback() {
+        public void onSuccess(String connectionToken) {
+            Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
+        }
 
-    public void onFail(MobileError error) {
-        Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
-    }
-});
+        public void onFail(MobileError error) {
+            Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
+        }
+    });
+ } catch (MobileException e) {
+     ...       
+ }
 ```
 
 ## connect(String idToken, String accessToken, int lifetime, ConnectionCallback callback)
@@ -89,16 +128,19 @@ cpaas.getAuthentication().connect("id_token", 3600, new ConnectionCallback() {
 Establishes a connection for the user with given ID Token, which will last until the time given with lifetime is elapsed, using given accessToken. accessToken will be set internally and then connection will be established just like the connect method in (a).
 
 ```java
-cpaas.getAuthentication().connect("id_token", "access_token" 3600, new ConnectionCallback() {
-	public void onSuccess(String connectionToken) {
-			Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
-	}
+ try{
+    cpaas.getAuthentication().connect(YOUR_ID_TOKEN, YOUR_ACCESS_TOKEN, 3600, new ConnectionCallback() {
+        public void onSuccess(String connectionToken) {
+                Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
+        }
 
-	public void onFail(MobileError error) {
-			Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
-	}
-});
-
+        public void onFail(MobileError error) {
+                Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
+        }
+    });
+ } catch (MobileException e) {
+     ...       
+ }
 ```
 
 ## connect(String idToken, int lifetime, String channelInfo, ConnectionCallback callback)
@@ -106,16 +148,20 @@ cpaas.getAuthentication().connect("id_token", "access_token" 3600, new Connectio
 Channel-info consists of information about lifetime and channel URL of the Websocket channel. Instead of getting new channel URL, this method can be called if channel-info is known in order to connect specified channel URL. If lifetime information doesn't expired in the channel-info, Authentication uses lifetime and channel URL information in the channel-info in order to connect and returns new channel-info in the ConnectionBlock. If lifetime is expired, then a new connection is established by given ID Token.
 
 ```java
-cPaaS.getAuthentication().setToken("access_token");
-cpaas.getAuthentication().connect("id_token", 3600, "channelInfo", new ConnectionCallback() {
-    public void onSuccess(String connectionToken) {
-        Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
-    }
+ try{
+    cPaaS.getAuthentication().setToken(YOUR_ACCESS_TOKEN);
+    cpaas.getAuthentication().connect(YOUR_ID_TOKEN, 3600, "channelInfo", new ConnectionCallback() {
+        public void onSuccess(String connectionToken) {
+            Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
+        }
 
-    public void onFail(MobileError error) {
-        Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
-    }
-});
+        public void onFail(MobileError error) {
+            Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
+        }
+    });
+ } catch (MobileException e) {
+     ...       
+ }
 ```
 
 ## connect(String idToken, String accessToken, int lifetime, String channelInfo, ConnectionCallback callback)
@@ -123,13 +169,17 @@ cpaas.getAuthentication().connect("id_token", 3600, "channelInfo", new Connectio
 Similar to the previous method, access token can be also given within the same method. Method will set the access token internally.
 
 ```java
-cpaas.getAuthentication().connect("id_token", "access_token", 3600, "channelInfo", new ConnectionCallback() {
-    public void onSuccess(String connectionToken) {
-        Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
-    }
+ try{
+    cpaas.getAuthentication().connect(YOUR_ID_TOKEN,YOUR_ACCESS_TOKEN, 3600, "channelInfo", new ConnectionCallback() {
+        public void onSuccess(String connectionToken) {
+            Log.i(“CPaaS.Authentication”, “Connected to websocket successfully”);
+        }
 
-    public void onFail(MobileError error) {
-        Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
-    }
-});
+        public void onFail(MobileError error) {
+            Log.i(“CPaaS.Authentication”, “Connection to websocket failed”);
+        }
+    });
+ } catch (MobileException e) {
+     ...       
+ }
 ```

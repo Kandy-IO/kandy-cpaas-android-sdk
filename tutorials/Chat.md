@@ -20,6 +20,8 @@ Chat messaging is managed by the Chat Service which can be called from the `CPaa
 In order to use the Chat service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive Chat notifications from the server.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatService;
+
 // build up the list of services for subscriptions
 List<ServiceInfo> services = new ArrayList<>();
 services.add(new ServiceInfo(ServiceType.CHAT, true));
@@ -102,6 +104,8 @@ chatConversation.fetchMessages(new FetchCallback<List<Message>>() {
 Retrieve a list of message objects by filter from the server.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.api.FetchOptions;
+
 FetchOptions options = new FetchOptions();
 options.max(50);
 
@@ -126,6 +130,9 @@ The Mobile SDK provides the ability to send text messages as well as messages wi
 Send a Chat message to a single destination specified as the conversation participant with message content specified by withText. An implementer should specify a completion block to handle any response whether error or successful response.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatConversation;
+import com.rbbn.cpaas.mobile.messaging.OutboundMessage;
+
 String participant = "user@domain.com";
 ChatConversation chatConversation = (ChatConversation) chatService.createConversation(participant);
 
@@ -151,6 +158,9 @@ chatConversation.send(message, new MessagingCallback() {
 Send a Chat message with a file attachment to a single destination specified as the conversation participant with message content specified by "text" and attachment specified by "withFile". An implementer may specify a code block for indicating progress to the user. An implementer should specify a completion block to handle any response whether error or successful response.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.OutboundMessage;
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatConversation;
+
 String participant = "user@domain.com";
 ChatConversation chatConversation = (ChatConversation) chatService.createConversation(participant);
 
@@ -181,6 +191,11 @@ chatConversation.send(message, new MessagingCallback() {
 After receiving or fetching a chat message with an attachment download the attachment file. The application may implement a progress handling code block for the purposes of indicating download progress to the user. An implementer should appropriately handle the downloaded file in the completion handler.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.model.Attachment;
+import com.rbbn.cpaas.mobile.messaging.chat.api.TransferProgressListener;
+import com.rbbn.cpaas.mobile.messaging.chat.api.DownloadCompleteListener;
+import com.rbbn.cpaas.mobile.messaging.chat.api.TransferRequestHandle;
+
 Attachment attachment = message.getParts().get(1).getFile();
 
 String url = attachment.getLink();
@@ -368,6 +383,8 @@ private void createChatGroup() {
 When the admin priviliged user wanted to add member to a current group, groupChat object's add method can be called. GroupChat object is initialized by Mobile SDK when createGroupChat method is called.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatGroupParticipant;
+
 public void addGroupMember(View view) {
   List<ChatGroupParticipant> memberList = new ArrayList<>();
   String member = input.getText().toString();
@@ -515,6 +532,9 @@ When the current user added to a group, this listener method will be triggered.
 Invitation parameter contains an invitation object that contains a copy of the group to be joined. The invitation object has methods for accept and decline.
 
 ```java
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatListener;
+
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class ChatManager implements ChatListener {
 
   ...
@@ -533,6 +553,7 @@ When a new user added to a group or removed from group, or any other status upda
 Participants parameter contains an array of chat group members that have updated status
 
 ```java
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class ChatManager implements ChatListener {
 
   ...
@@ -550,6 +571,7 @@ public class ChatManager implements ChatListener {
 This listener method is called when a group chat event has received. groupID parameter indicates the chat group for which the event notification is received.
 
 ```java
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class ChatManager implements ChatListener {
 
   ...

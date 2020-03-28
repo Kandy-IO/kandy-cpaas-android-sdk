@@ -26,7 +26,7 @@ allprojects {
 Add dependency of Kandy CPaaS Android SDK to your app level `build.gradle` file.
 
 ```
-implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.4.0'
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:2.5.0'
 ```
 
 That's all! You can use Kandy CPaaS Android SDK after you sync gradle.

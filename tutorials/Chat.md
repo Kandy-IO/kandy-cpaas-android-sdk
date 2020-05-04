@@ -19,6 +19,7 @@ Chat messaging is managed by the Chat Service which can be called from the `CPaa
 
 In order to use the Chat service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive Chat notifications from the server.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.chat.api.ChatService;
 
@@ -31,10 +32,24 @@ CPaaS cpaas = new CPaaS(services);
 ChatService chatService = cpaas.getChatService();
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatService;
+
+// build up the list of services for subscriptions
+val services = mutableListOf<ServiceInfo>()
+services.add(ServiceInfo(ServiceType.CHAT,true))
+
+val cpaas = CPaaS(services)
+
+val chatService: ChatService = cpaas.chatService
+```
+
 ### Implement and Set Chat Listener
 
 In order for the Mobile SDK to notify the application of notifications received from the server, an Chat listener must be set.
 
+*Java Code:*
 ```java
 chatService.setChatListener(this);
 
@@ -60,6 +75,30 @@ public void outboundChatMessageSent(OutboundMessage message) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+chatService.setChatListener(this)
+
+override fun inboundChatMessageReceived(message: InboundMessage?) {
+    Log.i("CPaaS.ChatService", "New message from " + message?.senderAddress)
+
+    // handle incoming Chat Message
+}
+
+override fun chatDeliveryStatusChanged(participant: String?, deliveryStatus: String?, messageId: String?) {
+    Log.i("CPaaS.ChatService", "Message delivery status changed to $deliveryStatus");
+
+    // handle delivery status for Chat Message
+}
+
+override fun outboundChatMessageSent(message: OutboundMessage?) {
+       Log.i("CPaaS.ChatService", "Message is sent to " + message?.destinationAddress);
+
+       // handle outgoing Chat Message
+   }
+
+
+```
 ## Fetching Chat Messages
 Chat messages are grouped into conversations with other users. A list of established conversations can be fetched from the server. For each conversation, the messages within that conversation may be fetched.
 
@@ -67,6 +106,7 @@ Chat messages are grouped into conversations with other users. A list of establi
 
 Retrieve a list of all conversation objects from the server. Use this list to populate the application model with existing conversations.
 
+*Java Code:*
 ```java
 chatService.fetchConversations(new FetchConversationsCallback() {
     @Override
@@ -76,15 +116,30 @@ chatService.fetchConversations(new FetchConversationsCallback() {
 
     @Override
     public void onFail(MobileError error) {
-        //handle success
+        //handle fail
     }
 });
+```
+
+*Kotlin Code:*
+```kotlin
+chatService.fetchConversations(object:FetchConversationsCallback{
+    override fun onSuccess(conversations: MutableList<Conversation>?) {
+        //handle success
+    }
+
+    override fun onFail(error: MobileError?) {
+        //handle fail
+    }
+
+})
 ```
 
 ### Fetch all messages from the server
 
 Retrieve a list of all message objects from the server.
 
+*Java Code:*
 ```java
 chatConversation.fetchMessages(new FetchCallback<List<Message>>() {
     @Override
@@ -99,10 +154,24 @@ chatConversation.fetchMessages(new FetchCallback<List<Message>>() {
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+chatConversation.fetchMessages(object:FetchCallback<List<Message>>{
+               override fun onSuccess(result: FetchResult<List<Message>>?) {
+                   //handle success
+               }
+
+               override fun onFail(error: MobileError?) {
+                   //handle fail
+               }
+
+           })
+```
 ### Fetch a number of messages from the server
 
 Retrieve a list of message objects by filter from the server.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.api.FetchOptions;
 
@@ -121,7 +190,24 @@ chatConversation.fetchMessages(options, new FetchCallback<List<Message>>() {
     }
 });
 ```
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.api.FetchOptions
 
+val options = FetchOptions()
+options.max(50)
+
+chatConversation.fetchMessages(options, object:FetchCallback<List<Message>>{
+    override fun onSuccess(result: FetchResult<List<Message>>?) {
+        //handle success
+    }
+
+    override fun onFail(error: MobileError?) {
+        //handle fail
+    }
+
+})
+```
 ## Sending Chat Messages
 The Mobile SDK provides the ability to send text messages as well as messages with file attachments.
 
@@ -129,6 +215,7 @@ The Mobile SDK provides the ability to send text messages as well as messages wi
 
 Send a Chat message to a single destination specified as the conversation participant with message content specified by withText. An implementer should specify a completion block to handle any response whether error or successful response.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.chat.api.ChatConversation;
 import com.rbbn.cpaas.mobile.messaging.OutboundMessage;
@@ -152,11 +239,34 @@ chatConversation.send(message, new MessagingCallback() {
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatConversation
+import com.rbbn.cpaas.mobile.messaging.OutboundMessage
+
+val participant = "user@domain.com"
+val chatConversation: ChatConversation = chatService.createConversation(participant) as ChatConversation
+
+val txt = "Hello world"
+val message:OutboundMessage = chatService.createMessage(txt)
+
+chatConversation.send(message,object:MessagingCallback{
+    override fun onSuccess() {
+        //handle success
+    }
+
+    override fun onFail(error: MobileError?) {
+        //handle fail
+    }
+
+})
+```
 
 ### Send a Chat message with a file attachment
 
 Send a Chat message with a file attachment to a single destination specified as the conversation participant with message content specified by "text" and attachment specified by "withFile". An implementer may specify a code block for indicating progress to the user. An implementer should specify a completion block to handle any response whether error or successful response.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.OutboundMessage;
 import com.rbbn.cpaas.mobile.messaging.chat.api.ChatConversation;
@@ -185,11 +295,40 @@ chatConversation.send(message, new MessagingCallback() {
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.OutboundMessage
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatConversation
+
+val participant = "user@domain.com"
+val chatConversation: ChatConversation = chatService.createConversation(participant) as ChatConversation
+
+val txt = "Hello world"
+val message:OutboundMessage = chatService.createMessage(txt)
+
+// an Attachment object is created after a file is uploaded with chatService.uploadAttachment()
+for(attachment:Attachment in attachments){
+message.attachFile(attachment)
+}
+
+chatConversation.send(message,object:MessagingCallback{
+    override fun onSuccess() {
+        //handle success
+    }
+
+    override fun onFail(error: MobileError?) {
+        //handle fail
+    }
+
+})
+```
+
 
 ### Download a file attachment from the server
 
 After receiving or fetching a chat message with an attachment download the attachment file. The application may implement a progress handling code block for the purposes of indicating download progress to the user. An implementer should appropriately handle the downloaded file in the completion handler.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.model.Attachment;
 import com.rbbn.cpaas.mobile.messaging.chat.api.TransferProgressListener;
@@ -224,6 +363,40 @@ DownloadCompleteListener downloadCompleteListener = new DownloadCompleteListener
 TransferRequestHandle handle = chatService.downloadAttachment(url, folder, filename, progressCallback, downloadCompleteListener);
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.model.Attachment
+import com.rbbn.cpaas.mobile.messaging.chat.api.TransferProgressListener
+import com.rbbn.cpaas.mobile.messaging.chat.api.DownloadCompleteListener
+import com.rbbn.cpaas.mobile.messaging.chat.api.TransferRequestHandle
+
+val attachment:Attachment = message.parts[1].file
+
+val url = attachment.link
+val filename = attachment.name
+val folder = //download folder
+
+val progressCallback = object:TransferProgressListener{
+    override fun reportProgress(bytes: Long, totalBytes: Long) {
+        Log.i("CPaaS.ChatService", "Downloaded $bytes of $totalBytes bytes")
+    }
+
+}
+
+val downloadCompleteListener = object:DownloadCompleteListener{
+    override fun downloadSuccess(path: String?) {
+        // handle downloaded file
+    }
+    override fun downloadFail(error: String?) {
+        // handle fail
+    }
+
+}
+
+val handle:TransferRequestHandle = chatService.downloadAttachment(url, folder, filename, progressCallback, downloadCompleteListener)
+
+```
+
 ## Receiving Chat Messages
 Receiving chat messages is an even driven process for new messages and an application requested event for message history. See the application listener method [**inboundMessageReceived**](#implement-and-set-chat-listener) from the initialization procedure for receiving new chat messages via notifications. See the Conversation [**fetchMessages**](#fetching-chat-messages) method from the fetching chat messages procedure.
 
@@ -234,8 +407,9 @@ An application may find it necessary to delete historical chat conversations. Me
 
 Delete an entire message thread from the server. This method will delete all messages associated with a particular participant.
 
+*Java Code:*
 ```java
-chatService.deleteConversation(participant, new MessagingCallback() {
+chatConversation.deleteConversation(new MessagingCallback() {
     @Override
     public void onSuccess() {
         // handle success
@@ -248,10 +422,24 @@ chatService.deleteConversation(participant, new MessagingCallback() {
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+chatConversation.deleteConversation(object:MessagingCallback{
+                   override fun onSuccess() {
+                       //handle success
+                   }
+
+                   override fun onFail(p0: MobileError?) {
+                       //handle fail
+                   }
+
+               })
+```
 ### Delete a message from the server
 
 Delete a single message from a message thread. Each message has a unique identifier which can be used for erasing the message.
 
+*Java Code:*
 ```java
 String messageID = message.getMessageID();
 chatConversation.deleteMessage(messageID, new MessagingCallback() {
@@ -267,6 +455,20 @@ chatConversation.deleteMessage(messageID, new MessagingCallback() {
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val messageId = message.messageId
+chatConversation.deleteMessage(messageId,object:MessagingCallback{
+    override fun onSuccess() {
+        //handle success
+    }
+
+    override fun onFail(error: MobileError?) {
+        //handle fail
+    }
+
+})
+```
 ## Group Chat
 
 Group Chat messaging is managed by the Chat Service which can be called from the `CPaaS` instance. In order to receive and send events, the `CPaaS` instance should be connected first. To see how to connect and set configurations, check **Login** and **Configurations** sections.
@@ -275,6 +477,7 @@ Group Chat messaging is managed by the Chat Service which can be called from the
 
 After the app succesfully connected to backend and authenticated,  already joined groups can be pulled from backend.
 
+*Java Code:*
 ```java
 protected void fetchGroups() {
   chatService.fetchAllGroups(new FetchGroupsCallback() {
@@ -291,11 +494,29 @@ protected void fetchGroups() {
   });
 }
 ```
+*Kotlin Code:*
+```kotlin
+private fun fetchGroups(){
+   chatService.fetchAllGroups(object:FetchGroupsCallback{
+       override fun onSuccess(groups: MutableList<ChatGroup>?) {
+           //handle success
+       }
+
+       override fun onFail(error: MobileError?) {
+           //handle fail
+       }
+
+   })
+}
+
+```
+
 
 ### Receiving joined groups icons
 
 After successfully receiving the list of groups which user has joined, the app should download the icons of the related groups from backend server.
 
+*Java Code:*
 ```java
 public void downloadAttachment(Attachment attachment, ImageView imageView) {
   String url = attachment.getLink();
@@ -324,10 +545,36 @@ public void downloadAttachment(Attachment attachment, ImageView imageView) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+fun downloadAttachment(attachment: Attachment,imageView: ImageView){
+    val url = attachment.link
+    val folder = DOWNLOAD_FOLDER + File.separator
+    val filename = attachment.name
+
+    val progressCallback = object:TransferProgressListener{
+       override fun reportProgress(bytes: Long, totalBytes: Long) {
+           Log.i("CPaaS.ChatService", "Downloaded $bytes of $totalBytes bytes")
+       } 
+   }
+
+    val downloadCompleteListener = object:DownloadCompleteListener{
+       override fun downloadSuccess(path: String?) {
+        // handle downloaded file
+    }
+       override fun downloadFail(error: String?) {
+        // handle fail
+    }
+
+}
+}
+```
+
 ### Upload Group Chat Image
 
 If the creator of the group wants to add an image before creating the group, the image file needs to be uploaded to server by using chat service.
 
+*Java Code:*
 ```java
 public void uploadAttachment(Uri uri) {
   TransferProgressListener transferProgressListener = new TransferProgressListener() {
@@ -353,10 +600,33 @@ public void uploadAttachment(Uri uri) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+fun uploadAttachment(uri: Uri){
+    val transferProgressListener = object:TransferProgressListener{
+        override fun reportProgress(bytes: Long, totalBytes: Long) {
+            Log.d(TAG, "Uploaded $bytes of $totalBytes bytes")
+        }
+    }
+    val uploadCompleteListener = object:UploadCompleteListener{
+        override fun uploadSuccess(attachment: Attachment?) {
+            //handle success
+        }
+        override fun uploadFail(error: String?) {
+            //handle fail
+        }
+    }
+    val transferRequestHandle:TransferRequestHandle = chatService.uploadAttachment(uri,transferProgressListener,uploadCompleteListener)
+
+}
+
+```
+
 ### Create a Chat Group
 
 When group name and subject is decided, createGroupChat method of ChatGroup service must be called in order to create a chat group and invite the participants. Upon succesfull creation of group, user creates the group conversation.
 
+*Java Code:*
 ```java
 private void createChatGroup() {
   String groupName = nameEditText.getText().toString();
@@ -366,7 +636,7 @@ private void createChatGroup() {
 
   chatService.createGroup(subject, image, groupName, isOpen, memberList, new FetchGroupCallback() {
     @Override
-    public void onSuccess(group) {
+    public void onSuccess(ChatGroup group) {
       // handle success
     }
 
@@ -378,10 +648,34 @@ private void createChatGroup() {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun createChatGroup(){
+val groupName = nameEditText.text.toString()
+val subject = subjectEditText.text.toString()
+val image = "https://imagelink"
+val isOpen = false
+
+chatService.createGroup(subject, image, groupName, isOpen, memberList, object:FetchGroupCallback{
+    override fun onSuccess(group: ChatGroup?) {
+        //handle success
+    }
+
+    override fun onFail(error: MobileError?) {
+        //handle fail
+    }
+
+})
+}
+
+
+```
+
 ### Add Participants To Already Created Group
 
 When the admin priviliged user wanted to add member to a current group, groupChat object's add method can be called. GroupChat object is initialized by Mobile SDK when createGroupChat method is called.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.chat.api.ChatGroupParticipant;
 
@@ -410,11 +704,47 @@ public void addGroupMember(View view) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatGroupParticipant
+
+fun addGroupMember(view: View){
+    val memberList = mutableListOf<ChatGroupParticipant>()
+    val member = input.text.toString()
+
+    val chatGroupParticipant = chatService.createChatGroupParticipant(member)
+
+    if(newGroup){
+        memberList.add(chatGroupParticipant)
+        runOnUiThread {
+            groupMembersAdapter.notifyDataSetChanged()
+        }
+    } else {
+        chatService.addParticipantToGroup(groupId, member, object:MessagingCallback{
+            override fun onSuccess() {
+                memberList.add(chatGroupParticipant)
+                runOnUiThread {
+                    groupMembersAdapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun onFail(p0: MobileError?) {
+                //handle fail
+            }
+
+        })
+    }
+
+}
+
+```
+
 ### Remove Participants From Already Created Group
 
 When the admin priviliged user wants to remove a member from a current group, groupChat object's remove method must be called.
 GroupChat object is initialized by Mobile SDK when createGroupChat method is called.
 
+*Java Code:*
 ```java
 private void removeParticipantFromGroup(ChatGroupParticipant chatGroupParticipant) {
   String participant = chatGroupParticipant.getAddress();
@@ -438,11 +768,36 @@ private void removeParticipantFromGroup(ChatGroupParticipant chatGroupParticipan
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun removeParticipantFromGroup(chatGroupParticipant: ChatGroupParticipant) {
+  val participant = chatGroupParticipant.address
+  if(groupId.length() > 0) {
+  // existing group, remove the participant from the group on the server
+  chatService.removeParticipantFromGroup(groupId, participant, object:MessagingCallback{
+      override fun onSuccess() {
+        memberList.remove(chatGroupParticipant)
+      }
+
+      override fun onFail(error: MobileError?) {
+        //handle fail
+      }
+
+  })
+  } else {
+    // new group, just remove the participant from the list
+    memberList.remove(chatGroupParticipant)
+}
+}
+
+```
+
 ### Accept invitation from a group
 
 When a user is added to a group an invitation message is sent. Upon receiving the invitation, user either accepts it and joins the group or decline it remove self from the group.
 For accepting the invitation call the Mobile SDK group chat accept method.
 
+*Java Code:*
 ```java
 private void acceptInvitation(ChatGroup chatGroup) {
   String groupId = chatGroup.getId();
@@ -460,10 +815,28 @@ private void acceptInvitation(ChatGroup chatGroup) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun acceptInvitation(chatGroup: ChatGroup) {
+  val groupId = chatGroup.id
+  chatService.acceptGroupInvitation(groupId, object:MessagingCallback{
+         override fun onSuccess() {
+           //handle success
+         }
+
+         override fun onFail(error: MobileError?) {
+           //handle fail
+         }
+
+     })
+}
+```
+
 ### Decline invitation from a group
 
 When a user added to a group, an invitation message is sent. Upon receiving the invitation, user either accepts it and joins the group or declines the invitation and removed from group. For declining the invitation call the Mobile SDK group chat decline method.
 
+*Java Code:*
 ```java
 private void declineInvitation(ChatGroup chatGroup) {
   String groupId = chatGroup.getId();
@@ -482,10 +855,30 @@ private void declineInvitation(ChatGroup chatGroup) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun declineInvitation(chatGroup: ChatGroup) {
+  val groupId = chatGroup.id
+  chatService.declineGroupInvitation(groupId, object:MessagingCallback{
+        override fun onSuccess() {
+          groupList.remove(chatGroup)
+          adapter.setGroupList(groupList)
+        }
+
+        override fun onFail(error: MobileError?) {
+          //handle fail
+        }
+
+    })
+  }
+
+```
+
 ### Delete chat group permanently
 
 If an admin privileged user wants to delete the chat group, deleteChatGroup method must be called.
 
+*Java Code:*
 ```java
 private void deleteChatGroup(ChatGroup chatGroup) {
   String groupId = chatGroup.getId();
@@ -504,10 +897,29 @@ private void deleteChatGroup(ChatGroup chatGroup) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun deleteChatGroup(chatGroup:ChatGroup){
+  val groupId = chatGroup.id
+  chatService.deleteGroup(groupId, object:MessagingCallback{
+        override fun onSuccess() {
+          groupList.remove(chatGroup)
+          adapter.setGroupList(groupList)
+        }
+
+        override fun onFail(error: MobileError?) {
+          //handle fail
+        }
+
+    })
+  }
+```
+
 ### Leave chat group permanently
 
 If an user wants to leave the chat group, leaveChatGroup method must be called.
 
+*Java Code:*
 ```java
 private void leaveChatGroup(ChatGroup chatGroup) {
   String groupId = chatGroup.getId();
@@ -526,11 +938,31 @@ private void leaveChatGroup(ChatGroup chatGroup) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun leaveChatGroup(chatGroup: ChatGroup) {
+  val groupId = chatGroup.id
+  chatService.leaveGroup(groupId, object:MessagingCallback{
+      override fun onSuccess() {
+        groupList.remove(chatGroup)
+        adapter.setGroupList(groupList)
+      }
+
+      override fun onFail(error: MobileError?) {
+        //handle fail
+      }
+
+  })
+}
+
+```
+
 ### Receiving invitations
 
 When the current user added to a group, this listener method will be triggered.
 Invitation parameter contains an invitation object that contains a copy of the group to be joined. The invitation object has methods for accept and decline.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.messaging.chat.api.ChatListener;
 
@@ -547,11 +979,28 @@ public class ChatManager implements ChatListener {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.messaging.chat.api.ChatListener
+
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
+class ChatManager: ChatListener {
+
+    ...
+    
+
+    override fun groupChatSessionInvitation(chatGroupParticipants: MutableList<ChatGroupParticipant>?, groupId: String?, groupName: String?) {
+       // handle group session invitations
+}
+
+```
+
 ### Receiving group participants status
 
 When a new user added to a group or removed from group, or any other status update happened about a group participant. This method will be trigered
 Participants parameter contains an array of chat group members that have updated status
 
+*Java Code:*
 ```java
 //implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class ChatManager implements ChatListener {
@@ -566,20 +1015,51 @@ public class ChatManager implements ChatListener {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
+
+class ChatManager: ChatListener {
+
+    ...
+    
+    override fun chatParticipantStatusChanged(chatGroupParticipant: ChatGroupParticipant?, groupId: String?) {
+        // handle group participant status changes
+    }
+}
+
+```
+
 ### Group chat event notification
 
 This listener method is called when a group chat event has received. groupID parameter indicates the chat group for which the event notification is received.
 
+*Java Code:*
 ```java
 //implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class ChatManager implements ChatListener {
 
   ...
-
+  
   @Override
     public void groupChatEventNotification(String type, String description, String groupId) {
       // handle chat group events
     }
+
+}
+```
+
+*Kotlin Code:*
+```kotlin
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
+
+class ChatManager: ChatListener {
+
+    ...
+
+    override fun groupChatEventNotification(type: String?, description: String?, groupId: String?) {
+       // handle chat group events
+}
 
 }
 ```

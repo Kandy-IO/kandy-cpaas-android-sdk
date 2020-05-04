@@ -73,7 +73,7 @@ allprojects {
 2. Add dependcy of MobileSDK to your app level **build.gradle** file.
 
 ```
-implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}'
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:{$SDK_VERSION$}'
 ```
 
 ![alt text](img/get_started_7.png "")
@@ -86,7 +86,7 @@ Check latest version of MobileSDK from <a href="https://github.com/Kandy-IO/kand
 
 #### Adding the dependency manually
 
-1. Download latest MobileSDK version from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk) and copy **aar** file to your project **lib** folder.
+1. Download latest MobileSDK version from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk/tree/$SDK_VERSION$/dist/com/kandy/mobile/kandycpaasmobilesdk/$SDK_VERSION$) and copy **aar** file to your project **lib** folder.
 
 ![alt text](img/get_started_8.png "")
 
@@ -103,7 +103,7 @@ flatDir {
 3. Add dependcy of MobileSDK to your app level **build.gradle** file with **@aar** prefix.
 
 ```
-implementation 'com.kandy.mobile:kandycpaasmobilesdk:{version}@aar'
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:{$SDK_VERSION$}@aar'
 ```
 
 ![alt text](img/get_started_13.png "")
@@ -199,6 +199,7 @@ The following is an example using the $KANDY$ Mobile SDK in Android:
 <br>
 6. Create a custom application class, which extends the generic "Application" structure of Android. Application should set its application context to Mobile SDK when it is created.
 
+*Java Code:*
 ```java
 package com.rbbn.mobilesdkdemo;
 
@@ -217,9 +218,26 @@ public class DemoApplication extends Application {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+package com.rbbn.mobilesdkdemo;
+
+import android.app.Application
+import com.rbbn.cpaas.mobile.utilities.Globals
+
+class DemoApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        Globals.setApplicationContext(applicationContext)
+    }
+}
+```
+
 <br>
 7. Open the MainActivity. If project has no activity, create one.
 
+*Java Code:*
 ```java
 package com.rbbn.mobilesdkdemo;
 
@@ -236,19 +254,47 @@ public class MainActivity extends Activity {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+package com.rbbn.mobilesdkdemo;
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+    }
+}
+```
+
 <br>
 8. Set $KANDY$ configurations for connection.
 
+*Java Code:*
 ```java
 Configuration.getInstance().setUseSecureConnection(true);
 Configuration.getInstance().setRestServerUrl("$KANDYFQDN$");
 Configuration.getInstance().setRestServerPort(443);
 }
 ```
+*Kotlin Code:*
+```kotlin
+Configuration.getInstance().isUseSecureConnection = true
+Configuration.getInstance().restServerUrl = "$KANDYFQDN$"
+Configuration.getInstance().restServerPort = 443
+}
+```
 
 <br>
-9. Add the following code to gets *"Access And Id Token"* from $KANDY$. Getting access and id token is explained in [**Getting Access and Id Token from $KANDY$**](#getting-access-and-id-token-from-kandy) section in detail.
+9. Add the following code to gets *"Access And Id Token"* from $KANDY$. Getting access and id token is explained in 
 
+[**Getting Access and Id Token from $KANDY$**](GetStarted.md#getting-access-and-id-token-from-$KANDY$)
+section in detail.
+
+*Java Code:*
 ```java
 Button getTokenButton=findViewById(R.id.getTokenButton);
 getTokenButton.setOnClickListener(new View.OnClickListener() {
@@ -270,9 +316,27 @@ getTokenButton.setOnClickListener(new View.OnClickListener() {
  });
 ```
 
+*Kotlin Code:*
+```kotlin
+getToken_button?.setOnClickListener {
+    val username = username.text.toString()
+    val password = password.text.toString()
+    val requestMap: HashMap<String,String> = HashMap()
+    requestMap["username"] = username
+    requestMap["password"] = password
+    requestMap["client_id"] = "your_client_id"
+    requestMap["grant_type"] = "password"
+    requestMap["scope"] = "openid"
+    requestMap["client_secret"] = ""
+    AccessandIdTokenTask().execute(requestMap)
+
+}
+```
+
 <br>
 10. Add the following code to login action for establishing connection to $KANDY$.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.CPaaS;
 
@@ -303,9 +367,37 @@ loginButton.setOnClickListener(new View.OnClickListener() {
     }
 });
 ```
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.CPaaS;
+
+login_button?.setOnClickListener {
+    val lifetime = 3600 //in seconds
+
+    val services = mutableListOf<ServiceInfo>()
+    services.add(ServiceInfo(ServiceType.SMS,true))
+    services.add(ServiceInfo(ServiceType.CALL,true))
+
+    val cpaas = CPaaS(services)
+
+    cpaas.authentication.connect(YOUR_ID_TOKEN,YOUR_ACCESS_TOKEN, lifetime, object:ConnectionCallback{
+        override fun onSuccess(channelInfo: String?) {
+            //connection is successful
+        }
+
+        override fun onFail(error: MobileError?) {
+           //connection failed
+        }
+
+    })
+}
+
+```
+
 
 ## Getting Access And Id Token from $KANDY$
 
+*Java Code:*
 ```java
 private class AccessAndIdTokenTask extends AsyncTask<HashMap<String,String>, Void, String> {
 
@@ -361,7 +453,7 @@ private class AccessAndIdTokenTask extends AsyncTask<HashMap<String,String>, Voi
 
             StringBuilder result = new StringBuilder();
             String line;
-            while ((line = rd.readLine()) != null) {
+            if ((line = rd.readLine()) != null) {
                 result.append(line);
             }
             return result.toString();
@@ -385,3 +477,78 @@ private class AccessAndIdTokenTask extends AsyncTask<HashMap<String,String>, Voi
 
     }
 ```
+*Kotlin Code:*
+```kotlin
+class AccessandIdTokenTask : AsyncTask<HashMap<String, String>, Void, String>() {
+
+    override fun doInBackground(vararg params: HashMap<String, String>?): String? {
+        val _requestMap:HashMap<String,String>? = params[0]
+        val requestUrl = "https://$BASE_URL/cpaas/auth/v1/token"
+
+        return requestAccessandIdToken(requestUrl,_requestMap?.get("username"),_requestMap?.get("password"),
+            _requestMap?.get("client_id"),_requestMap?.get("client_secret"),_requestMap?.get("scope"))
+    }
+
+    override fun onPostExecute(result: String?) {
+        super.onPostExecute(result)
+        if(result != null){
+            parseAccessandIdTokenResult(result)
+        }
+
+    }
+
+    private fun requestAccessandIdToken(requestUrl:String,username:String?,
+                                        password:String?,client_id:String?,
+                                        client_secret:String?,scope:String?): String? {
+        var urlConnection:HttpURLConnection? = null
+        try {
+            val url = URL(requestUrl)
+            urlConnection = url.openConnection() as HttpURLConnection?
+
+            urlConnection?.requestMethod = "POST"
+            urlConnection?.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+
+            urlConnection?.doOutput = true
+
+            var outputStream:OutputStream? = null
+
+            try {
+                val bodyBuilder = StringBuilder()
+                bodyBuilder.append("grant_type=password&");
+                bodyBuilder.append("username=").append(username).append("&")
+                bodyBuilder.append("password=").append(password).append("&")
+                bodyBuilder.append("client_id=").append(client_id).append("&")
+                bodyBuilder.append("client_secret=").append(client_secret).append("&")
+                bodyBuilder.append("scope=").append(scope)
+
+                outputStream = urlConnection?.outputStream
+                outputStream?.write(bodyBuilder.toString().toByteArray())
+                outputStream?.flush()
+            } finally {
+                outputStream?.close()
+            }
+            val rd = BufferedReader(InputStreamReader(urlConnection!!.inputStream))
+            val result = StringBuilder()
+            val line = rd.readLine()
+            if (line != null){
+                    result.append(line)
+                }
+            return result.toString()
+        } catch (exception:Exception){
+            urlConnection?.disconnect()
+        }
+        return null
+    }
+}
+ fun parseAccessandIdTokenResult(result:String){
+     try {
+         val tokenJSONObject = JSONObject(result)
+         val YOUR_ACCESS_TOKEN = tokenJSONObject.getString("access_token")
+         val YOUR_ID_TOKEN = tokenJSONObject.getString("id_token")
+     } catch (e:JSONException){
+         e.printStackTrace()
+     }
+ }
+```
+
+

@@ -28,6 +28,7 @@ To use `FirebaseMessagingService`, you need to add the following in your app man
 
 In order to subscribe push notification service, your app has to receive deviceToken from the Firebase and pass that value to `PushManager` of the $KANDY$.
 
+*Java Code:*
 ```java
 String fcmPushDeviceToken = FirebaseInstanceId.getInstance().getToken();
 String packageNameOfTheApplication = getActivity().getPackageName();
@@ -44,11 +45,29 @@ CPaaS.getPushManager().subscribe(packageNameOfTheApplication, fcmPushDeviceToken
     }
 });
 ```
+*Kotlin Code:*
+```kotlin
 
+val fcmPushDeviceToken = FirebaseInstanceId.getInstance().token
+val packageNameOfTheApplication = packageName
+
+cPaaS.pushManager.subscribe(packageNameOfTheApplication,fcmPushDeviceToken,object:PushSubscriptionCallback{
+    override fun onSuccess(callbackUrl: String?) {
+        Log.i("pushNotification", " Callback url $callbackUrl")
+    }
+
+    override fun onFail(error: MobileError?) {
+        Log.i("pushNotification", " Error " + error?.errorMessage)
+    }
+
+})
+
+```
 ## Receiving Push Notification
 
 After registering the push service, create your `MyFirebaseMessagingService` class to receive push events. You should override `onMessageReceived` method of the `FirebaseMessagingService` interface and inject the push notification payload to $KANDY$ using `injectPushMessage` method.
 
+*Java Code:*
 ```java
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 	...
@@ -68,5 +87,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         });
     }
 	...
-}
+}f
+```
+
+*Kotlin Code:*
+```kotlin
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+    ...
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+            super.onMessageReceived(remoteMessage)
+            cPaaS.pushManager.injectPushMessage(remoteMessage.data,object:PushInjectionCallback{
+                override fun onSuccess() {
+                    Log.i("FCM", "Push inject push message succeed")
+                }
+
+                override fun onFail(error: MobileError?) {
+                    Log.i("FCM", "Push inject push message failed : " + error?.errorMessage)
+                }
+
+            })
+        }
+    }
 ```

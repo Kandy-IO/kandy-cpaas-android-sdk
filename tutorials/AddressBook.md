@@ -6,6 +6,7 @@ $KANDY$ offers set of APIs to store, manage and search contacts through address 
 
 $KANDY$ Mobile SDK provides and use `Contact` model for all of the Address Book operations. A `Contact` object should contain an unique ID and set of attributes. An unique ID can be provided while constructing and object, but by default $KANDY$ Mobile SDK supplies a default random String.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.addressbook.model.Contact;
 
@@ -16,8 +17,18 @@ contactWithSDKProvidedId.getContactId(); // It's some random UUID
 contactWithExternallyProvidedId.getContactId(); // It's "hereIsMyUniqueId"
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.addressbook.model.Contact
+val contactWithSDKProvidedId = Contact()
+val contactWithExternallyProvidedId = Contact("hereIsMyUniqueId")
+
+contactWithSDKProvidedId.contactId // It's some random UUID
+contactWithExternallyProvidedId.contactId // It's "hereIsMyUniqueId"
+```
 A Contact object can contain attributes like primary contact, first name, last name, email address, business phone number, home phone number, mobile number, fax number, pager number and buddy value (All available fields can be found in the `AttributeName` enum). A contact's "primary contact" attribute corresponds to "User Id", which can be used with call, chat and presence services. Each attribute can contain only one value.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.addressbook.model.Contact;
 
@@ -31,12 +42,28 @@ exampleContact.setHomePhoneNumber("455533394");
 exampleContact.setMobilePhoneNumber("455533394");
 exampleContact.setBuddy(true);
 ```
+
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.addressbook.model.Contact
+
+val exampleContact = Contact()
+exampleContact.primaryContact = "test@test.com"
+exampleContact.firstName = "Test"
+exampleContact.lastName = "LastTest"
+exampleContact.emailAddress = "test@test.com"
+exampleContact.businessPhoneNumber = "455533394"
+exampleContact.homePhoneNumber = "455533394"
+exampleContact.mobilePhoneNumber = "455533394"
+exampleContact.isBuddy = true
+```
 Note that, $KANDY$ automatically appends the domain address (e.g. @test.com) to primary contact attribute when it's not provided while creating or updating a contact.
 
 ### Adding a new Contact
 
 $KANDY$ Mobile SDK provides `addContact` ability to add `Contact` objects to user's address book. `addContact` operation requires a new `Contact` object with unique Contact ID that $KANDY$ Mobile SDK provides by default.
 
+*Java Code:*
 ```java
 Contact exampleContact = new Contact();
 // ... setting Contact's attributes
@@ -53,10 +80,27 @@ CPaaS.getAddressBookService().addContact(exampleContact, "default", new AddConta
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val exampleContact = Contact()
+// ... setting Contact's attributes
+CPaaS.addressBookService.addContact(exampleContact, "default", object:AddContactCallback{
+    override fun onSuccess(contact: Contact?) {
+        // exampleContact successfully added to user's "default" address book and AddContactCallback returns uploaded contact object value.
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
+
 ### Updating a contact
 
 $KANDY$ Mobile SDK provides `updateContact` ability to update an existing `Contact` on the user's specified address book. A contact's attributes can be updated through each setter methods of the `Contact` object. Update operation only changes provided modifications and giving empty string value can be used as a remove operation.
 
+*Java Code:*
 ```java
 Contact existingContact = ExampleContactProvider.getSomeExistingContact();
 existingContact.setBuddy(false);
@@ -76,12 +120,33 @@ CPaaS.getAddressBookService().updateContact(existingContact, "default", new Upda
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val existingContact:Contact = ExampleContactProvider.someExistingContact
+existingContact.isBuddy = false
+existingContact.emailAddress = "test2@test.com"
+existingContact.firstName = "" // removing the first name attribute (if exists) by giving empty string.
+
+CPaaS.addressBookService.updateContact(existingContact, "default", object:UpdateContactCallback{
+    override fun onSuccess(contact: Contact?) {
+        // existingContact successfully updated on the user's "default" address book and UpdateContactCallback returns the final state of the contact object.
+    }
+
+    override fun onFail(error: MobileError?) {
+        //Operation failed.
+    }
+
+})
+
+```
+
 ### Getting all contacts
 
 In order to fetch all contacts from a specific adddress book, $KANDY$ Mobile SDK provides `retrieveContactList` API.
 
 Example usage of the `retrieveContactList` API:
 
+*Java Code:*
 ```java
 CPaaS.getAddressBookService().retrieveContactList("default", new RetrieveContactsCallback() {
     @Override
@@ -97,12 +162,27 @@ CPaaS.getAddressBookService().retrieveContactList("default", new RetrieveContact
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+CPaaS.addressBookService.retrieveContactList("default", object:RetrieveContactsCallback{
+    override fun onSuccess(contacts: MutableList<Contact>?) {
+        // List of contacts that available in the "default" address book.
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
+
 ### Getting a contact
 
 In order to get a single contact from a specific adddress book, $KANDY$ Mobile SDK provides `getContact` API.
 
 Example usage of the `getContact` API:
 
+*Java Code:*
 ```java
 String contactId = someContact.getContactId();
 
@@ -119,12 +199,29 @@ CPaaS.getAddressBookService().getContact(contactId, "default", new GetContactCal
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val contactId = someContact.contactId
+
+CPaaS.addressBookService.getContact(contactId, "default", object:GetContactCallback{
+    override fun onSuccess(contact: Contact?) {
+        // The contact object that identified with the specified contactId
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
+
 ### Deleting a contact
 
 In order to delete a single contact from a specific adddress book, $KANDY$ Mobile SDK provides `deleteContact` API.
 
 Example usage of the `deleteContact` API:
 
+*Java Code:*
 ```java
 String contactId = someContactToDelete.getContactId();
 
@@ -141,17 +238,41 @@ CPaaS.getAddressBookService().deleteContact(contactId, "default", new DeleteCont
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val contactId = someContactToDelete.contactId
+v
+CPaaS.addressBookService.deleteContact(contactId, "default", object:DeleteContactCallback{
+    override fun onSuccess() {
+        // Contact successfully deleted
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+
+```
+
 ### Directly updating or removing contact attributes
 
 $KANDY$ Mobile SDK provides ability to updating or removing a specific contact attribute. Attribute operations can be performed by using `Attribute` and `AttributeName` enum classes.
 
 In order to update an attribute, you should create `Attribute` object with `AttributeName` and `String` pair:
 
+*Java Code:*
 ```java
 Attribute updatedAttribute = new Attribute(AttributeName.MOBILE, "+0024949214");
 ```
+
+*Kotlin Code:*
+```kotlin
+val updatedAttribute = Attribute(AttributeName.MOBILE, "+0024949214")
+```
 Then you can pass that object to AddressBookService to update that specific attribute:
 
+*Java Code:*
 ```java
 CPaaS.getAddressBookService().updateAttribute(updatedAttribute, "default", contactId, new UpdateAttributeCallback() {
     @Override
@@ -166,8 +287,24 @@ CPaaS.getAddressBookService().updateAttribute(updatedAttribute, "default", conta
     }
 });
 ```
+
+*Kotlin Code:*
+```kotlin
+CPaaS.addressBookService.updateAttribute(updatedAttribute, "default", contactId, object:UpdateAttributeCallback{
+    override fun onSuccess(attribute: Attribute?) {
+        // Returns the updated Attribute object.
+    }
+
+    override fun onFail(error ": MobileError?) {
+        // Operation failed.
+    }
+
+})
+
+```
 To remove an attribute, you need to provide ID of the attribute (`AttributeName`) to AddressBookService:
 
+*Java Code:*
 ```java
 CPaaS.getAddressBookService().removeAttribute(AttributeName.MOBILE, "default", contactId, new RemoveAttributeCallback() {
     @Override
@@ -182,6 +319,21 @@ CPaaS.getAddressBookService().removeAttribute(AttributeName.MOBILE, "default", c
     }
 });
 ```
+
+*Kotlin Code:*
+```kotlin
+CPaaS.addressBookService.removeAttribute(AttributeName.MOBILE, "default", contactId, object:RemoveAttributeCallback{
+    override fun onSuccess() {
+        // Attribute successfully removed!
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+
+```
 Note that, contact attribute updates and removals can also be performed with updateContact APIs.
 
 ## Managing Address Book Lists
@@ -193,6 +345,7 @@ $KANDY$ Mobile SDK offers ability to manage address book lists.
 
 $KANDY$ Mobile SDK provides `addAddressBookList` ability to add `AddressBookList` objects to user's address book lists. `addAddressBookList` operation requires a new `AddressBookList` object with unique list ID.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.addressbook.model.AddressBookList;
 
@@ -210,12 +363,31 @@ CPaaS.getAddressBookService().addAddressBookList(exampleList, "default", new Add
     }
 });
 ```
+
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.addressbook.model.AddressBookList
+
+val exampleList = AddressBookList()
+//... setting Contact's attributes
+cpaas.addressBookService.addAddressBookList(exampleList, "default", object:AddAddressBookListCallback{
+    override fun onSuccess(list: AddressBookList?) {
+        // exampleList successfully added to user's "default" address book and AddAddressBookListCallback returns uploaded exampleList object value.
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
 ### Adding or updating contact's address book list membership
 
 Address Book list membership of the contact can be managed by `Contact` object's `setAddressBookListIds` and `getAddressBookListIds` methods. A contact can contain multiple address book list membership, but this number can vary between address book providers. Current implementation of the $KANDY$ Address Book service only allows one adress book list membership.
 
 Example usage of adding or updating a contact to list on $KANDY$ Mobile SDK:
 
+*Java Code:*
 ```java
 Contact existingContact = ExampleContactProvider.getSomeExistingContact();
 existingContact.setAddressBookListIds(Collections.singletonList("exampleList")); // Setting single list membership to contact
@@ -233,12 +405,31 @@ CPaaS.getAddressBookService().updateContact(existingContact, "default", new Upda
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val existingContact:Contact = ExampleContactProvider.someExistingContact
+existingContact.addressBookListIds = Collections.singletonList("exampleList") //Setting single list membership to contact
+
+CPaaS.addressBookService.updateContact(existingContact, "default", object:UpdateContactCallback{
+    override fun onSuccess(contact: Contact?) {
+        // existingContact successfully updated on the user's "default" address book and UpdateContactCallback returns the final state of the contact object.
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+
+```
+
 Note that, this operation requires using `updateContact` operation, $KANDY$ Mobile SDK does not provide separate address book list API. Also, this operation will create a new address book list if that's not created previosly.
 
 ### Updating an address book list
 
 $KANDY$ Mobile SDK provides `updateAddressBookList` ability to update an existing `AddressBookList`s while maintaining its membership information.
 
+*Java Code:*
 ```java
 AddressBookList someExitingList = ExampleABListProvider.getSomeExistingList();
 String oldListId = someExitingList.getListId();
@@ -257,10 +448,29 @@ CPaaS.getAddressBookService().updateAddressBookList(updatedList, oldListId, "def
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val someExistingList : AddressBookList = ExampleABListProvider.someExistingList
+val oldListId = someExistingList.listId
+val updatedList = AddressBookList("New list name")
+
+CPaaS.addressBookService.updateAddressBookList(updatedList, oldListId, "default", object:UpdateAddressBookListCallback{
+    override fun onSuccess(list: AddressBookList?) {
+        // Old list successfully updated
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
+
 ### Getting all address book lists
 
 In order to fetch all address book lists from a specific adddress book, $KANDY$ Mobile SDK provides `retrieveAddressBookLists` API.
 
+*Java Code:*
 ```java
 CPaaS.getAddressBookService().retrieveAddressBookLists("default", new RetrieveAddressBookListsCallback() {
     @Override
@@ -276,12 +486,27 @@ CPaaS.getAddressBookService().retrieveAddressBookLists("default", new RetrieveAd
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+CPaaS.addressBookService.retrieveAddressBookLists("default", object:RetrieveAddressBookListsCallback{
+    override fun onSuccess(addressBookLists: MutableList<AddressBookList>?) {
+        // List of address book lists that available in the "default" address book.
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
+
 ### Getting an address book list
 
 In order to get a address book list from a specific adddress book, $KANDY$ Mobile SDK provides `getAddressBookList` API.
 
 Example usage of the `getAddressBookList` API:
 
+*Java Code:*
 ```java
 String listId = someAddressBookList.getListId();
 
@@ -298,12 +523,29 @@ CPaaS.getAddressBookService().getAddressBookList(listId, "default", new GetAddre
 });
 ```
 
+*Kotlin Code:*
+```kotlin
+val listId = someAddressBookList.listId
+
+CPaaS.addressBookService.getAddressBookList(listId, "default", object:GetAddressBookListCallback{
+    override fun onSuccess(addressBookList: AddressBookList?) {
+        // The addressBookList object that identified with the specified contactId
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
+```
+
 ### Deleting an address book list
 
 In order to delete a address book list, $KANDY$ Mobile SDK provides `deleteAddressBookList` API.
 
 Example usage of the `deleteAddressBookList` API:
 
+*Java Code:*
 ```java
 String listId = someAddressBookList.getListId();
 
@@ -318,6 +560,22 @@ CPaaS.getAddressBookService().deleteAddressBookList(listId, "default", new Delet
         // Operation failed.
     }
 });
+```
+
+*Kotlin Code:*
+```kotlin
+val listId = someAddressBookList.listId
+
+CPaaS.addressBookService.deleteAddressBookList(listId, "default", object:DeleteAddressBookListCallback{
+    override fun onSuccess() {
+        // List successfully deleted
+    }
+
+    override fun onFail(error: MobileError?) {
+        // Operation failed.
+    }
+
+})
 ```
 
 ## Directory Search
@@ -394,6 +652,7 @@ Returns next chunk of contacts of the succeded directory search operation. If `h
 
 Example of usage of search:
 
+*Java Code:*
 ```java
 private void searchResult(String criteria) {
     showProgressDialog("Search directory for " + criteria);
@@ -419,8 +678,35 @@ private void searchResult(String criteria) {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun searchResult(criteria:String){
+    showProgressDialog("Search directory for $criteria")
+
+    val search = Search(SearchFilter(FieldType.NAME, criteria))
+    search.sortBy(FieldType.FIRST_NAME)
+    search.order(SearchOrder.ASCENDING)
+    search.limit(10)
+    search.directoryId("default") // That's the only id currently supported by $KANDY$
+
+    CPaaS.addressBookService.search(search, object:SearchCallback{
+        override fun onSuccess(result: SearchResult?) {
+            // obtain SearchResult to get gathered contacts and it may contain more results, use hasNext to check that
+        }
+
+        override fun onFail(error: MobileError?) {
+            // Error occured
+        }
+
+    })
+
+}
+
+```
+
 ### Obtaining more results from `SearchResult`:
 
+*Java Code:*
 ```java
 private void nextSearchResults(SearchResult searchResult) {
     if (searchResult != null && searchResult.hasNext()) {
@@ -437,4 +723,23 @@ private void nextSearchResults(SearchResult searchResult) {
         });
     }
 }
+```
+
+*Kotlin Code:*
+```kotlin
+private fun nextSearchResults(searchResult: SearchResult){
+    if(searchResult != null && searchResult.hasNext()){
+        searchResult.getNext(object:SearchCallback{
+            override fun onSuccess(result: SearchResult?) {
+                // Next results are obtained
+            }
+
+            override fun onFail(error: MobileError?) {
+                // Operation failed
+            }
+
+        })
+    }
+}
+
 ```

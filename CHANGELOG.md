@@ -5,6 +5,15 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.6.0 - 2020-04-05
+
+### Added
+- Groups can now have multiple admins and Group properties such as name, subject and image can be changed. `KAE-533`
+
+### Fixed
+- After Session Complete notification the end call DELETE request must be sent. `KAE-669`
+- Authentication disconnect issue is fixed. `KAE-652`
+
 ## 2.5.0 - 2020-03-20
 
 ## 2.4.0 - 2020-03-02

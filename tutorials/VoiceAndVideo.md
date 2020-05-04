@@ -17,6 +17,7 @@ Voice and Video calls are managed by the Call Service which can be called from `
 
 You can create **OutgoingCall** object by calling **createOutgoingCall** method in Call Service.
 
+*Java Code:*
 ```java
 
 callService.createOutgoingCall(callee, new OutgoingCallCreationCallback() {
@@ -44,12 +45,42 @@ callService.createOutgoingCall(callee, new OutgoingCallCreationCallback() {
         });
 ```
 
+*Kotlin Code:*
+```kotlin
+
+callService.createOutgoingCall(callee,object:OutgoingCallCreationCallback{
+               override fun callCreated(callInterface: OutgoingCallInterface?) {
+                   // Call successfully created, use the CallInterface object to process the call.
+                   callInterface?.setRemoteVideoView(remoteVideoView) // Provide a VideoView widget object to show the local video on the UI
+                   callInterface?.setLocalVideoView(localVideoView) // Provide a VideoView widget object to show the local video on the UI
+
+                   // For Video call
+                   callInterface?.establishCall(true)
+
+                   // For Double M-Line Audio Call
+                   callInterface?.establishCall(false)
+
+                   // For Single M-Line Audio Call
+                   callInterface?.establishAudioCall()
+               }
+
+               override fun callCreationFailed(error: MobileError?) {
+                   // Call creation failed, handle the exception
+                   Log.e(TAG, "callCreationFailed: " + error?.errorMessage)
+               }
+
+           })
+
+
+```
+
 You need to get `callId` to use call events. You can get `callId` by calling `callInterface.getId()` inside the success block of the `OutgoingCallCreationCallback`.
 
 ## Receiving Incoming Call
 
 When $KANDY$ Mobile SDK receives an incoming call, it calls `incomingCall` method in the `CallApplicationListener`. Thus, `CallApplicationListener` should be set to the class where managed. Now, the application should receive incoming call events if any.
 
+*Java Code:*
 ```java
 //implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
 public class Application implements CallApplicationListener {
@@ -60,6 +91,18 @@ Application application = ...;
 callService.setCallApplicationListener(application);
 ```
 
+*Kotlin Code:*
+```kotlin
+//implementing class should not be a disposable UI component, If so some notifications might be missed from app point of view
+class Application : CallApplicationListener {
+  ...
+}
+
+val application: Application = ...
+callService.setCallApplicationListener(application)
+}
+
+```
 ### Managing Incoming Call
 
 When `incomingCall` method is notified with the received call, call can be accepted with videoEnabled option, rejected or ignored. Application will be informed about success or fail via the callback methods on `CallApplicationListener` which are related to the operation.
@@ -68,6 +111,7 @@ When `incomingCall` method is notified with the received call, call can be accep
 
 An incoming call can be accepted by calling the `acceptCall` method on the incoming call instance which is received from `CallApplicationListener`.
 
+*Java Code:*
 ```java
 import com.rbbn.cpaas.mobile.call.IncomingCall;
 
@@ -83,14 +127,38 @@ private void acceptIncomingCall() {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+import com.rbbn.cpaas.mobile.call.IncomingCall
+
+private fun acceptIncomingCall() {
+    val incomingCall: IncomingCall = // get from the CallApplicationListener with the callId
+    // For video call
+    incomingCall.setRemoteVideoView(remoteVideoView)
+    incomingCall.setLocalVideoView(localVideoView)
+    incomingCall.acceptCall(true)
+    
+    // For audio call
+    incomingCall.acceptCall(false);
+
+```
+
 #### Rejecting Incoming Call
 
 An incoming call can be rejected by calling the `rejectCall` method on the incoming call instance.
 
+*Java Code:*
 ```java
 private void rejectIncomingCall() {
 	IncomingCall incomingCall = // get from the CallApplicationListener with the callId
 	incomingCall.rejectCall();
+}
+```
+*Kotlin Code:*
+```kotlin
+private fun rejectIncomingCall(){
+    val incomingCall: IncomingCall = // get from the CallApplicationListener with the callId
+    incomingCall.rejectCall()
 }
 ```
 
@@ -98,10 +166,18 @@ private void rejectIncomingCall() {
 
 An incoming call can be ignored by calling the `ignoreCall` method on the incoming call instance.
 
+*Java Code:*
 ```java
-private void rejectIncomingCall() {
+private void ignoreIncomingCall() {
 	IncomingCall incomingCall = // get from the CallApplicationListener with the callId
 	incomingCall.ignoreCall();
+}
+```
+*Kotlin Code:*
+```kotlin
+private fun ignoreIncomingCall(){
+    val incomingCall: IncomingCall = // get from the CallApplicationListener with the callId
+    incomingCall.ignoreCall()
 }
 ```
 
@@ -109,6 +185,7 @@ private void rejectIncomingCall() {
 
 An incoming call can be forwarded to another user by calling the `forwardCall` method on the incoming call instance. After a successful invokation of the forward operation, call will be ended on the client which invoked the operation, the user whose address is given to forward operation will receive an incoming call from the originator side.
 
+*Java Code:*
 ```java
 private void forwardIncomingCall() {
   IncomingCall incomingCall = // get from the CallApplicationListener with the callId
@@ -117,10 +194,20 @@ private void forwardIncomingCall() {
 }
 ```
 
+*Kotlin Code:*
+```kotlin
+private fun forwardIncomingCall(){
+    val incomingCall: IncomingCall = // get from the CallApplicationListener with the callId
+    val targetAddress = // address of the user to whom the call is forwarded
+    incomingCall.forwardCall(targetAddress)
+}
+```
+
 ## Managing Call Events
 
 Methods implemented in the `CallApplicationListener` are notified with the events occurred during the call, or `callStatusChanged` when state of the call is changed. By listening these methods, call events can be managed directly. To see all methods implemented in the `CallApplicationListener`, see API Reference Documents.
 
+*Java Code:*
 ```java
 	@Override
     public void callStatusChanged(CallInterface callInterface, CallState callState) {
@@ -129,6 +216,13 @@ Methods implemented in the `CallApplicationListener` are notified with the event
     }
 ```
 
+*Kotlin Code:*
+```kotlin
+override fun callStatusChanged(callInterface: CallInterface?, callState: CallState?) {
+    Log.d(TAG, "callStatusChanged: Call state is: " + callState?.type + " call id is: " + callInterface?.id);
+    // Now you can broadcast and process the state of the specific call with its unique ID.
+}
+```
 ### Starting Call Events
 
 Both incoming call and outgoing call objects are inherited from `CallInterface`. Except particular properties and methods defined in incoming call and outgoing call classes, all methods and properties defined in `CallInterface` are suitable for both call type.
@@ -141,10 +235,14 @@ Furthermore, when a mid-call operation finishes which is called by the user, its
 
 To end an incoming or outgoing call, `endCall` method on call instance can be called.
 
+*Java Code:*
 ```java
 call.endCall();
 ```
-
+*Kotlin Code:*
+```kotlin
+call.endCall()
+```
 #### To hold or unhold call
 
 While in a call, a participant may be placed on hold by calling `holdCall` method. When operation succeeds, media transfer between participants stops, and call state will change to `On Hold` state. Remote participant will see this call session in `Remotely Held` state.
@@ -153,27 +251,46 @@ To resume to the call, `unholdCall` method should be called. Note that, these op
 
 Note that a call already in `On Hold` state may not be placed on hold. Similarly, attempting to `unhold` a call that is not in `On Hold` state will fail.
 
+*Java Code:*
 ```java
 call.holdCall();
 call.unholdCall();
 ```
 
+*Kotlin Code:*
+```kotlin
+call.holdCall()
+call.unholdCall()
+```
+
 #### To start or stop sending video
 
+*Java Code:*
 ```java
 call.videoStart();
 call.videoStop();
+```
+
+*Kotlin Code:*
+```kotlin
+call.videoStart()
+call.videoStop()
 ```
 
 #### To mute or unmute call
 
 To stop sending audio from the microphone, `mute` method can be called. Until unmuting the call, participants cannot hear the voice from the device.
 
+*Java Code:*
 ```java
+call.mute();
+call.unMute();
+```
+*Kotlin Code:*
+```kotlin
 call.mute()
 call.unMute()
 ```
-
 ## Anonymous Calls
 
 $KANDY$ offers to make voice and video calls even if the application user does not have a $KANDY$ account to login. This functionality is called as Anonymous Call on $KANDY$ system. Anonymous call feature can be useful for applications such as customer service support. Since the application user does not have a $KANDY$ account, only an outgoing call can be made to a registered $KANDY$ user. An anonymous user cannot receive and incoming call with this feature.

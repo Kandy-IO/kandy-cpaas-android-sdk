@@ -12,7 +12,10 @@ Mobile SDK needs to know about the application context. Application developers s
 
 ### Example: Setting application context
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.utilities.Globals;
 
@@ -26,7 +29,9 @@ public class ExampleApplication extends Application {
     }
 }
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 import android.app.Application
 import com.rbbn.cpaas.mobile.utilities.Globals
@@ -39,6 +44,7 @@ class ExampleApplication:Application() {
     }
 }
 ```
+<!-- tabs:end -->
 
 ## Configurations
 
@@ -71,7 +77,10 @@ $KANDYTURN2$
 
 $KANDYSTUN2$
 ```
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.utilities.Configuration;
 import com.rbbn.cpaas.mobile.utilities.webrtc.ICEServers;
@@ -89,7 +98,8 @@ iceServers.addICEServer("$KANDYSTUN2$");
 configuration.setICEServers(iceServers);
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.utilities.Configuration
 import com.rbbn.cpaas.mobile.utilities.webrtc.ICEServers
@@ -105,6 +115,7 @@ iceServers.addICEServer("$KANDYSTUN1$")
 iceServers.addICEServer("$KANDYSTUN2$")
 Configuration.getInstance().iceServers = iceServers
 ```
+<!-- tabs:end -->
 
 #### Capturing Logs and Troubleshooting Problems
 
@@ -112,7 +123,10 @@ The log level configs are used to change the severity of logging output from $KA
 
 $KANDY$ Mobile SDK also provides application developers to set their customized logger implementation into Mobile SDK.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 class CustomizedLogger implements Logger {
     @Override
@@ -132,7 +146,8 @@ configuration.setLogLevel(LogLevel.TRACE);
 configuration.setLogger(new CustomizedLogger());
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 class CustomizedLogger: Logger {
 
@@ -149,6 +164,7 @@ class CustomizedLogger: Logger {
 Configuration.getInstance().logLevel = LogLevel.TRACE
 Configuration.getInstance().logger = CustomizedLogger()
 ```
+<!-- tabs:end -->
 
 ## connect(String idToken, int lifetime, ConnectionCallback callback)
 
@@ -156,7 +172,10 @@ Establishes a connection for the user with given ID Token, which will last until
 
 Authentication needs access token in order to get and establish Websocket subscription. So before using this method, access token should be given to the Authentication with calling setToken method.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
  try{
     cPaaS.getAuthentication().setToken(YOUR_ACCESS_TOKEN);
@@ -174,7 +193,8 @@ Authentication needs access token in order to get and establish Websocket subscr
  }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 try {
     cpaas.authentication.setToken(YOUR_ACCESS_TOKEN)
@@ -192,11 +212,16 @@ try {
     ...
 }
 ```
+<!-- tabs:end -->
+
 ## connect(String idToken, String accessToken, int lifetime, ConnectionCallback callback)
 
 Establishes a connection for the user with given ID Token, which will last until the time given with lifetime is elapsed, using given accessToken. accessToken will be set internally and then connection will be established just like the connect method in (a).
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
  try{
     cpaas.getAuthentication().connect(YOUR_ID_TOKEN, YOUR_ACCESS_TOKEN, 3600, new ConnectionCallback() {
@@ -212,7 +237,9 @@ Establishes a connection for the user with given ID Token, which will last until
      ...       
  }
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 try {
     cpaas.authentication.connect(YOUR_ID_TOKEN,YOUR_ACCESS_TOKEN,3600,object:ConnectionCallback{
@@ -229,13 +256,16 @@ try {
     ...
 }
 ```
-
+<!-- tabs:end -->
 
 ## connect(String idToken, int lifetime, String channelInfo, ConnectionCallback callback)
 
 Channel-info consists of information about lifetime and channel URL of the Websocket channel. Instead of getting new channel URL, this method can be called if channel-info is known in order to connect specified channel URL. If lifetime information doesn't expired in the channel-info, Authentication uses lifetime and channel URL information in the channel-info in order to connect and returns new channel-info in the ConnectionBlock. If lifetime is expired, then a new connection is established by given ID Token.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
  try{
     cPaaS.getAuthentication().setToken(YOUR_ACCESS_TOKEN);
@@ -252,7 +282,9 @@ Channel-info consists of information about lifetime and channel URL of the Webso
      ...       
  }
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 try {
     cpaas.authentication.setToken(YOUR_ACCESS_TOKEN)
@@ -270,13 +302,16 @@ try {
     ...
 }
 ```
-
+<!-- tabs:end -->
 
 ## connect(String idToken, String accessToken, int lifetime, String channelInfo, ConnectionCallback callback)
 
 Similar to the previous method, access token can be also given within the same method. Method will set the access token internally.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
  try{
     cpaas.getAuthentication().connect(YOUR_ID_TOKEN,YOUR_ACCESS_TOKEN, 3600, "channelInfo", new ConnectionCallback() {
@@ -293,7 +328,8 @@ Similar to the previous method, access token can be also given within the same m
  }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 try {
     cpaas.authentication.connect(YOUR_ID_TOKEN,YOUR_ACCESS_TOKEN,3600,"channelInfo",object:ConnectionCallback{
@@ -310,3 +346,4 @@ try {
     ...
 }
 ```
+<!-- tabs:end -->

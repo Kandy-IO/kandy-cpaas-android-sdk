@@ -6,7 +6,10 @@ Presence publishing and watching are managed by the Presence Service which can b
 
 In order to use the Presence service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive presence notifications from the server.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.CPaaS;
 import com.rbbn.cpaas.mobile.presence.api.PresenceService;
@@ -20,7 +23,8 @@ CPaaS cpaas = new CPaaS(services);
 PresenceService presenceService = cpaas.getPresenceService();
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.CPaaS
 import com.rbbn.cpaas.mobile.presence.api.PresenceService
@@ -33,10 +37,15 @@ val cpaas = CPaaS(services)
 
 val presenceService:PresenceService = cpaas.presenceService
 ```
+<!-- tabs:end -->
 
 ### Implement and Set Presence Listener
 
 In order for the Mobile SDK to notify the application of notifications received from the server, a presence listener must be set.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
 
 ```java
 presenceService.setPresenceListener(this);
@@ -64,7 +73,8 @@ public void presenceListNotification(String listId, PresenceList presenceList) {
 }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 presenceService.setPresenceListener(this)
 
@@ -89,6 +99,7 @@ override fun presenceListNotification(listId: String?, presenceList: PresenceLis
     Log.d(TAG, "Presence list notification for $listId")
 }
 ```
+<!-- tabs:end -->
 
 ## Publishing Presence
 An application publishes the status of a user by creating and updating a PresenceSource.
@@ -96,6 +107,10 @@ An application publishes the status of a user by creating and updating a Presenc
 ### Publish Presence Source
 
 Publish the presence activity of the local user by creating new PresenceSource or updating an existing PresenceSource.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
 
 ```java
 import com.rbbn.cpaas.mobile.utilities.services.PresenceEnums;
@@ -143,7 +158,8 @@ void updateMyPresence(PresenceSource presenceSource) {
 }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.utilities.services.PresenceEnums
 
@@ -183,6 +199,7 @@ presenceService.createPresenceSource(86400,object:FetchPresenceSourceCallback{
 
  }
 ```
+<!-- tabs:end -->
 
 ## Watching User Presence
 An application watches the presence status of other users by creating a presentity list and subscribing for notifications concerning changes to that users in that list. An application may modify the membership of the presentity watch list after creation.
@@ -190,6 +207,10 @@ An application watches the presence status of other users by creating a presenti
 ### Watch Presentity List
 
 Watch the status of users by creating a PresentityList with the contacts to watch. Then subscribe for notifications about changes to the PresentityList.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
 
 ```java
 presenceService.createPresenceList(listID, new FetchPresenceListCallback() {
@@ -206,7 +227,8 @@ presenceService.createPresenceList(listID, new FetchPresenceListCallback() {
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 presenceService.createPresenceList(listID, object:FetchPresenceListCallback{
     override fun onSuccess(presenceList: PresenceList?) {
@@ -220,12 +242,16 @@ presenceService.createPresenceList(listID, object:FetchPresenceListCallback{
     }
 
 })
-
 ```
+<!-- tabs:end -->
 
 ### Add User to Presentity List
 
 An application may choose add contacts to an existing PresentityList. No re-subscription to the list is necessary.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
 
 ```java
 presenceService.addPresentityToList(presenceListKey, presentityID, new AddPresentityToListCallback() {
@@ -241,7 +267,8 @@ presenceService.addPresentityToList(presenceListKey, presentityID, new AddPresen
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 presenceService.addPresentityToList(presenceListKey,presentityID, object:AddPresentityToListCallback{
     override fun onSuccess(presentity: Presentity?) {
@@ -254,12 +281,16 @@ presenceService.addPresentityToList(presenceListKey,presentityID, object:AddPres
     }
 
 })
-
 ```
+<!-- tabs:end -->
 
 ### Remove User from Presentity List
 
 An application may choose remove contacts from a PresentityList.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
 
 ```java
 presenceService.deletePresentityFromList(presenceListKey, presentityId, new PresenceCallback() {
@@ -282,7 +313,8 @@ presenceService.deletePresentityFromList(presenceListKey, presentityId, new Pres
 	}
 });
 ```
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 presenceService.deletePresenceList(presenceListKey, presentityId, object:PresenceCallback{
     override fun onSuccess() {
@@ -303,6 +335,6 @@ presenceService.deletePresenceList(presenceListKey, presentityId, object:Presenc
     override fun onFail(error: MobileError?) {
         
     }
-
 })
 ```
+<!-- tabs:end -->

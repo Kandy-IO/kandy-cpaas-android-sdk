@@ -28,7 +28,10 @@ To use `FirebaseMessagingService`, you need to add the following in your app man
 
 In order to subscribe push notification service, your app has to receive deviceToken from the Firebase and pass that value to `PushManager` of the $KANDY$.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 String fcmPushDeviceToken = FirebaseInstanceId.getInstance().getToken();
 String packageNameOfTheApplication = getActivity().getPackageName();
@@ -45,7 +48,9 @@ CPaaS.getPushManager().subscribe(packageNameOfTheApplication, fcmPushDeviceToken
     }
 });
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 
 val fcmPushDeviceToken = FirebaseInstanceId.getInstance().token
@@ -59,15 +64,17 @@ cPaaS.pushManager.subscribe(packageNameOfTheApplication,fcmPushDeviceToken,objec
     override fun onFail(error: MobileError?) {
         Log.i("pushNotification", " Error " + error?.errorMessage)
     }
-
 })
-
 ```
+<!-- tabs:end -->
 ## Receiving Push Notification
 
 After registering the push service, create your `MyFirebaseMessagingService` class to receive push events. You should override `onMessageReceived` method of the `FirebaseMessagingService` interface and inject the push notification payload to $KANDY$ using `injectPushMessage` method.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 	...
@@ -90,7 +97,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 }f
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     ...
@@ -109,3 +117,4 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 ```
+<!-- tabs:end -->

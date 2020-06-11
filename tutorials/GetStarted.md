@@ -21,31 +21,19 @@ The following procedure uses Android Studio IDE to illustrate adding the Mobile 
 
 <br>
 
-3. Type your **Application name**, **Company domain**, and **Project location** and click **Next**.
+3. Select an activity or leave as default (Empty Activity) and click **Next**.
 
 ![alt text](img/get_started_2.png "")
 
 <br>
 
-4. Select minimum Android SDK version for phone and tablet (API Level 16 is recommended).
+4. Type your **Application name**, **Package name**, **Language**, **Project location**, **Minimum SDK** and click **Finish**.
 
 Note that, this is the minimum Android SDK API version that the demo application supports.
 
 For the target SDK version, Google suggests to set API Level 26 or higher. Target SDK can be changed on **build.gradle** file after the project creation.
 
 ![alt text](img/get_started_3.png "")
-
-<br>
-
-5. Select an activity or leave as default (Empty Activity) and click **Next**.
-
-![alt text](img/get_started_4.png "")
-
-<br>
-
-6. Edit the activity or leave as default and click **Finish**.
-
-![alt text](img/get_started_5.png "")
 
 ### Adding MobileSDK dependency to your project
 
@@ -55,7 +43,7 @@ There are 2 option to add MobileSDK dependency to your project. You can add Mobi
 
 1. Add MobileSDK repository url to your root level **build.gradle** file.
 
-```
+```groovy
 allprojects {
   repositories {
     google()
@@ -68,50 +56,50 @@ allprojects {
 }
 ```
 
-![alt text](img/get_started_6.png "")
+![alt text](img/get_started_4.png "")
 
 2. Add dependcy of MobileSDK to your app level **build.gradle** file.
 
-```
+```groovy
 implementation 'com.kandy.mobile:kandycpaasmobilesdk:{$SDK_VERSION$}'
 ```
 
-![alt text](img/get_started_7.png "")
+![alt text](img/get_started_5.png "")
 
-<div style="border-style:solid; page-break-inside: avoid;">
+<hr/>
 <h5>NOTE</h5>
 Check latest version of MobileSDK from <a href="https://github.com/Kandy-IO/kandy-cpaas-android-sdk">GitHub</a>.
 </div>
-<br>
+<hr/>
 
 #### Adding the dependency manually
 
 1. Download latest MobileSDK version from [GitHub](https://github.com/Kandy-IO/kandy-cpaas-android-sdk/tree/$SDK_VERSION$/dist/com/kandy/mobile/kandycpaasmobilesdk/$SDK_VERSION$) and copy **aar** file to your project **lib** folder.
 
-![alt text](img/get_started_8.png "")
+![alt text](img/get_started_6.png "")
 
 2. After that you need to inform gradle that your app will use manual aar files. To do that add **flatDir** path to your root level **build.gradle** file as in the example above.
 
-```
+```groovy
 flatDir {
   dirs 'libs'
 }
 ```
 
-![alt text](img/get_started_12.png "")
+![alt text](img/get_started_7.png "")
 
 3. Add dependcy of MobileSDK to your app level **build.gradle** file with **@aar** prefix.
 
-```
+```groovy
 implementation 'com.kandy.mobile:kandycpaasmobilesdk:{$SDK_VERSION$}@aar'
 ```
 
-![alt text](img/get_started_13.png "")
+![alt text](img/get_started_8.png "")
 
 ### Adding Java 8 support
 An Android application project must be compatible with Java 8 when it is using Mobile SDK library. This necessity comes from the WebRTC library, its code is dependent on some Java 8 features. In order to set this compliance, open **build.gradle** file, located under **app** module of **MobileSDKDemoApp** project. Add the configuration script below to the file.
 
-```
+```groovy
 android{
   compileOptions {
     targetCompatibility 1.8
@@ -120,7 +108,7 @@ android{
 }
 ```
 
-![alt text](img/get_started_14.png "")
+![alt text](img/get_started_9.png "")
 
 ## Using the $KANDY$ Mobile SDK in the Android project
 
@@ -129,27 +117,33 @@ The following is an example using the $KANDY$ Mobile SDK in Android:
 
 1. Locate and open **AndroidManifest.xml**.
 
-![alt text](img/get_started_9.png "")
+![alt text](img/get_started_10.png "")
 
-2. Add the following permissions to the manifest file:
+2. Add the following permissions to the manifest file like that sample:
 
 ```xml
-<uses-feature android:glEsVersion="0x00020000" android:required="true" />
-<uses-feature android:name="android.hardware.camera" />
-<uses-feature android:name="android.hardware.camera.autofocus" />
+<manifest xlmns:android...>
+    ...
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <application ...>
+        ...
+    </application>
+</manifest>
 ```
 
 <br>
 
 3. In your project folder, navigate to **res** > **layout** and open **activity_main.xml** to create your UI.
 
-![alt text](img/get_started_10.png "")
+![alt text](img/get_started_11.png "")
 
 <br>
 
@@ -194,12 +188,15 @@ The following is an example using the $KANDY$ Mobile SDK in Android:
 </LinearLayout>
 ```
 
-![alt text](img/get_started_11.png "")
+![alt text](img/get_started_12.png "")
 
 <br>
 6. Create a custom application class, which extends the generic "Application" structure of Android. Application should set its application context to Mobile SDK when it is created.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 package com.rbbn.mobilesdkdemo;
 
@@ -218,7 +215,8 @@ public class DemoApplication extends Application {
 }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 package com.rbbn.mobilesdkdemo;
 
@@ -233,11 +231,15 @@ class DemoApplication : Application() {
     }
 }
 ```
+<!-- tabs:end -->
 
 <br>
 7. Open the MainActivity. If project has no activity, create one.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 package com.rbbn.mobilesdkdemo;
 
@@ -254,7 +256,8 @@ public class MainActivity extends Activity {
 }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 package com.rbbn.mobilesdkdemo;
 
@@ -269,32 +272,42 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+<!-- tabs:end -->
 
 <br>
 8. Set $KANDY$ configurations for connection.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 Configuration.getInstance().setUseSecureConnection(true);
 Configuration.getInstance().setRestServerUrl("$KANDYFQDN$");
 Configuration.getInstance().setRestServerPort(443);
 }
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 Configuration.getInstance().isUseSecureConnection = true
 Configuration.getInstance().restServerUrl = "$KANDYFQDN$"
 Configuration.getInstance().restServerPort = 443
 }
 ```
+<!-- tabs:end -->
 
 <br>
-9. Add the following code to gets *"Access And Id Token"* from $KANDY$. Getting access and id token is explained in 
+9. Add the following code to gets <b>Access And Id Token</b> from $KANDY$. Getting access and id token is explained in 
 
-[**Getting Access and Id Token from $KANDY$**](GetStarted.md#getting-access-and-id-token-from-$KANDY$)
+[**Getting Access and Id Token from Provider**](GetStarted.md#getting-access-and-id-token-from-provider)
 section in detail.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 Button getTokenButton=findViewById(R.id.getTokenButton);
 getTokenButton.setOnClickListener(new View.OnClickListener() {
@@ -316,7 +329,8 @@ getTokenButton.setOnClickListener(new View.OnClickListener() {
  });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 getToken_button?.setOnClickListener {
     val username = username.text.toString()
@@ -332,11 +346,15 @@ getToken_button?.setOnClickListener {
 
 }
 ```
+<!-- tabs:end -->
 
 <br>
 10. Add the following code to login action for establishing connection to $KANDY$.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.CPaaS;
 
@@ -367,7 +385,9 @@ loginButton.setOnClickListener(new View.OnClickListener() {
     }
 });
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.CPaaS;
 
@@ -391,20 +411,22 @@ login_button?.setOnClickListener {
 
     })
 }
-
 ```
+<!-- tabs:end -->
 
+## Getting Access And Id Token from Provider
 
-## Getting Access And Id Token from $KANDY$
+<!-- tabs:start -->
 
-*Java Code:*
+#### ** Java Code **
+
 ```java
 private class AccessAndIdTokenTask extends AsyncTask<HashMap<String,String>, Void, String> {
 
         @Override
         protected String doInBackground(HashMap<String,String>... params) {
             HashMap<String,String> _requestMap=params[0];
-            String requestUrl = "https://"+BASE_URL+"/cpaas/auth/v1/token";
+            String requestUrl = "https://$KANDYFQDN$/cpaas/auth/v1/token";
 
             return requestAccessAndIdToken(requestUrl, _requestMap.get("username"), _requestMap.get("password"), _requestMap.get("client_id"), _requestMap.get("client_secret"), _requestMap.get("scope"));
         }
@@ -477,13 +499,15 @@ private class AccessAndIdTokenTask extends AsyncTask<HashMap<String,String>, Voi
 
     }
 ```
-*Kotlin Code:*
+
+#### ** Kotlin Code **
+
 ```kotlin
 class AccessandIdTokenTask : AsyncTask<HashMap<String, String>, Void, String>() {
 
     override fun doInBackground(vararg params: HashMap<String, String>?): String? {
         val _requestMap:HashMap<String,String>? = params[0]
-        val requestUrl = "https://$BASE_URL/cpaas/auth/v1/token"
+        val requestUrl = "https://$KANDYFQDN$/cpaas/auth/v1/token"
 
         return requestAccessandIdToken(requestUrl,_requestMap?.get("username"),_requestMap?.get("password"),
             _requestMap?.get("client_id"),_requestMap?.get("client_secret"),_requestMap?.get("scope"))
@@ -550,5 +574,5 @@ class AccessandIdTokenTask : AsyncTask<HashMap<String, String>, Void, String>() 
      }
  }
 ```
-
+<!-- tabs:end -->
 

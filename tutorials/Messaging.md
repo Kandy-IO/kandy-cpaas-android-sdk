@@ -9,13 +9,16 @@
 ---
 # SMS Messaging
 
-SMS messaging is managed by the SMS Service which can be called from the `CPaaS` instance. In order to receive and send events, the `CPaaS` instance should be connected first. To see how to connect and set configurations, check **Login** and **Configurations** sections.
+SMS messaging is managed by the SMS Service which can be called from the `CPaaS` instance. In order to receive and send events, the `CPaaS` instance should be connected first. To see how to connect and set configurations, check **Login** and **Configurations** sections. Note that, phone number should be assigned to the user before using the SMS Service.
 
 ### Initialize the SMS Service
 
-In order to use the SMS service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive SMS notifications from the server.Note that,phone number should be assigned to the user before using the SMS Service.
+In order to use the SMS service, the service provider object must be properly initialized. When properly initialized, the application will be registered to receive SMS notifications from the server.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.CPaaS;
 import com.rbbn.cpaas.mobile.messaging.sms.api.SMSService;
@@ -29,7 +32,8 @@ CPaaS cpaas = new CPaaS(services);
 SMSService smsService = cpaas.getSMSService();
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.CPaaS
 import com.rbbn.cpaas.mobile.messaging.sms.api.SMSService
@@ -42,12 +46,16 @@ services.add(ServiceInfo(ServiceType.SMS,true))
  
  val smsService: SMSService = cpaas.smsService
 ```
+<!-- tabs:end -->
 
 ### Implement and Set Sms Listener
 
 In order for the Mobile SDK to notify the application of notifications received from the server, an SMS listener must be set.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 smsService.setSMSListener(this);
 
@@ -73,7 +81,8 @@ public void outboundSMSMessageSent(OutboundMessage message) {
 }
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 smsService.setSMSListener(this)
 
@@ -94,8 +103,8 @@ override fun outboundSMSMessageSent(message: OutboundMessage?) {
 
     // handle outgoing SMS Message
 }
-
 ```
+<!-- tabs:end -->
 
 ## Fetching SMS Messages
 SMS messages are grouped into conversations with other users. A list of established conversations can be fetched from the server. For each conversation, the messages within that conversation may be fetched.
@@ -104,7 +113,10 @@ SMS messages are grouped into conversations with other users. A list of establis
 
 Retrieve a list of all conversation objects from the server. Use this list to populate the application model with existing conversations.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 smsService.fetchConversations(new FetchCallback<List<Conversation>>() {
     @Override
@@ -119,7 +131,8 @@ smsService.fetchConversations(new FetchCallback<List<Conversation>>() {
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 smsService.fetchConversations(object:FetchCallback<List<Conversation>>{
     override fun onSuccess(result: FetchResult<List<Conversation>>?) {
@@ -132,14 +145,17 @@ smsService.fetchConversations(object:FetchCallback<List<Conversation>>{
 
 })
 ```
-
+<!-- tabs:end -->
 
 ### Fetch conversations by criteria from the server
 
 Retrieve a list of relevant conversation objects from the server. Using FetchCriteria, users can filter the participant, sender phone number and options.
 Options filter has provided search parameters; max, last message time and is a new message.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.messaging.sms.api.FetchCriteria;
 import com.rbbn.cpaas.mobile.messaging.api.FetchOptions;
@@ -166,7 +182,8 @@ smsService.fetchConversations(criteria, new FetchCallback<List<Conversation>>() 
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.messaging.sms.api.FetchCriteria
 import com.rbbn.cpaas.mobile.messaging.api.FetchOptions
@@ -190,12 +207,16 @@ smsService.fetchConversations(criteria,object:FetchCallback<List<Conversation>>{
     }
 })
 ```
+<!-- tabs:end -->
 
 ### Fetch all messages from the server
 
 Retrieve a list of all message objects from the server.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 smsConversation.fetchMessages(new FetchCallback<List<Message>>() {
     @Override
@@ -210,7 +231,8 @@ smsConversation.fetchMessages(new FetchCallback<List<Message>>() {
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 smsConversation.fetchMessages(object:FetchCallback<List<Message>>{
     override fun onSuccess(result: FetchResult<List<Message>>?) {
@@ -222,11 +244,16 @@ smsConversation.fetchMessages(object:FetchCallback<List<Message>>{
     }
 })
 ```
+<!-- tabs:end -->
+
 ### Fetch a number of messages from the server
 
 Retrieve a list of message objects by filter from the server.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 FetchOptions options = new FetchOptions();
 options.max(50);
@@ -244,7 +271,8 @@ smsConversation.fetchMessages(options, new FetchCallback<List<Message>>() {
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 val options = FetchOptions()
 options.max(50)
@@ -257,9 +285,9 @@ smsConversation.fetchMessages(options,object:FetchCallback<List<Message>>{
     override fun onFail(error: MobileError?) {
         //handle fail
     }
-
 })
 ```
+<!-- tabs:end -->
 
 ## Sending SMS Messages
 The Mobile SDK provides the ability to send SMS text messages.
@@ -268,7 +296,10 @@ The Mobile SDK provides the ability to send SMS text messages.
 
 Send an SMS message from a local address specified by the SMS Service within a list of available numbers to a single destination specified as the conversation participant with message content specified by OutboundMessage. An implementer should specify a MessagingCallback to handle any response whether error or successful response.
 
-*Java Code:*
+<!-- tabs:start -->
+
+#### ** Java Code **
+
 ```java
 import com.rbbn.cpaas.mobile.messaging.sms.api.SMSConversation;
 import com.rbbn.cpaas.mobile.messaging.OutboundMessage;
@@ -294,7 +325,8 @@ smsConversation.send(message, new MessagingCallback() {
 });
 ```
 
-*Kotlin Code:*
+#### ** Kotlin Code **
+
 ```kotlin
 import com.rbbn.cpaas.mobile.messaging.sms.api.SMSConversation
 import com.rbbn.cpaas.mobile.messaging.OutboundMessage
@@ -319,7 +351,7 @@ smsConversation.send(message,object:MessagingCallback{
 
 })
 ```
-
+<!-- tabs:end -->
 
 ## Receiving SMS Messages
 

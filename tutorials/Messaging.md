@@ -9,7 +9,9 @@
 ---
 # SMS Messaging
 
-SMS messaging is managed by the SMS Service which can be called from the `CPaaS` instance. In order to receive and send events, the `CPaaS` instance should be connected first. To see how to connect and set configurations, check **Login** and **Configurations** sections. **Note that**, phone number should be assigned to the user before using the SMS Service.
+SMS messaging is managed by the SMS Service which can be called from the `CPaaS` instance. In order to receive and send events, the `CPaaS` instance should be connected first. To see how to connect and set configurations, check **Login** and **Configurations** sections. 
+
+**Note that**, phone number should be assigned to the user before using the SMS Service.
 
 ### Initialize the SMS Service
 
@@ -67,8 +69,8 @@ public void inboundSMSMessageReceived(InboundMessage message) {
 }
 
 @Override
-public void SMSDeliveryStatusChanged(String participant, String deliveryStatus, String messageID) {
-    Log.i("CPaaS.SMSService", "Message delivery status changed to " + deliveryStatus);
+public void SMSDeliveryStatusChanged(String participant, MessageDeliveryStatus deliveryStatus, String messageID) {
+    Log.i("CPaaS.SMSService", "Message delivery status changed to " + deliveryStatus.getString());
 
     // handle delivery status for SMS Message
 }
@@ -92,8 +94,8 @@ override fun inboundSMSMessageReceived(message: InboundMessage?) {
     // handle incoming SMS Message
 }
 
-override fun SMSDeliveryStatusChanged(participant: String?, deliveryStatus: String?, messageID: String?) {
-    Log.i("CPaaS.SMSService", "Message delivery status changed to $deliveryStatus")
+override fun SMSDeliveryStatusChanged(participant: String?, deliveryStatus: MessageDeliveryStatus, messageID: String?) {
+    Log.i("CPaaS.SMSService", "Message delivery status changed to $deliveryStatus.getString()")
 
     // handle delivery status for SMS Message
 }

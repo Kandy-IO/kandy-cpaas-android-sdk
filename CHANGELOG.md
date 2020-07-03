@@ -5,6 +5,18 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.8.0 - 2020-07-03
+
+### Changed
+
+- Usage of `ChatListener.chatDeliveryStatusChanged` method was changed as `void chatDeliveryStatusChanged(String participant, MessageDeliveryStatus deliveryStatus, String messageID)` 
+- Usage of `ChatListener.isComposingReceived` method was changed as `void isComposingReceived(String participant, MessageState state, long lastActive)`
+- Usage of `ChatMessageStatusListener.onSuccess` method was changed as `void onSuccess(MessageDeliveryStatus status)`
+- Usage of `SMSListener.SMSDeliveryStatusChanged` method was changed as `void SMSDeliveryStatusChanged(String participant, MessageDeliveryStatus deliveryStatus, String messageID)`
+- Type of `Message.status` was changed as `MessageDeliveryStatus`
+- Type of `Message.messageType` was changed as `MessageSessionType`
+- Type of `Part.type` was changed as `MessageContentType`
+
 ## 2.7.0 - 2020-06-12
 
 ## 2.6.0 - 2020-04-05

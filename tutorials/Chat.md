@@ -69,8 +69,8 @@ public void inboundChatMessageReceived(InboundMessage message) {
 }
 
 @Override
-public void chatDeliveryStatusChanged(String participant, String deliveryStatus, String messageID) {
-  Log.i("CPaaS.ChatService", "Message delivery status changed to " + deliveryStatus);
+public void chatDeliveryStatusChanged(String participant, MessageDeliveryStatus deliveryStatus, String messageID) {
+  Log.i("CPaaS.ChatService", "Message delivery status changed to " + deliveryStatus.getString());
 
   // handle delivery status for Chat Message
 }
@@ -94,8 +94,8 @@ override fun inboundChatMessageReceived(message: InboundMessage?) {
     // handle incoming Chat Message
 }
 
-override fun chatDeliveryStatusChanged(participant: String?, deliveryStatus: String?, messageId: String?) {
-    Log.i("CPaaS.ChatService", "Message delivery status changed to $deliveryStatus");
+override fun chatDeliveryStatusChanged(participant: String?, deliveryStatus: MessageDeliveryStatus, messageId: String?) {
+    Log.i("CPaaS.ChatService", "Message delivery status changed to $deliveryStatus.getString()");
 
     // handle delivery status for Chat Message
 }

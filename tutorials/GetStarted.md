@@ -416,6 +416,8 @@ login_button?.setOnClickListener {
 
 ## Getting Access And Id Token from Provider
 
+To get more information about `clientID`, please look [here](https://apimarket.att.com/developer/quickstarts/rest-api/get-started#get-started-authentication-and-authorization)
+
 <!-- tabs:start -->
 
 #### ** Java Code **

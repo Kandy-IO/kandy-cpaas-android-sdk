@@ -17,6 +17,9 @@ CPaaS Android SDK change log.
 - Type of `Message.messageType` was changed as `MessageSessionType`
 - Type of `Part.type` was changed as `MessageContentType`
 
+### Note
+- These changes is not backward compatible please check your related code base.
+
 ## 2.7.0 - 2020-06-12
 
 ## 2.6.0 - 2020-04-05

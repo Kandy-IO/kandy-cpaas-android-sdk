@@ -110,6 +110,23 @@ android{
 
 ![alt text](img/get_started_9.png "")
 
+### Suggested Config for Publishing APK on Google Play Store
+
+For publishing your app in Google Play Store, correct architecture of CPUs must be included your APK. For that reason, open root level **build.gradle** file and add this gradle config.
+
+```groovy
+android {
+    buildTypes {
+        debug {
+            ndk { abiFilters "x86", "arm64-v8a", "armeabi-v7a" }
+        }
+        release {
+            ndk { abiFilters "arm64-v8a", "armeabi-v7a" }
+        }
+    }
+}
+```
+
 ## Using the $KANDY$ Mobile SDK in the Android project
 
 Once the library is attached to the Android project, the $KANDY$ Mobile SDK can be used by defining the necessary import items.

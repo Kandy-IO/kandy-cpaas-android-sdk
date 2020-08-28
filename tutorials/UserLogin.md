@@ -166,6 +166,8 @@ Configuration.getInstance().logger = CustomizedLogger()
 ```
 <!-- tabs:end -->
 
+Our recommendation is to store the logs in memory and provide the ability to send them log file over e-mail to our support team if issues are encountered.
+
 ## connect(String idToken, int lifetime, ConnectionCallback callback)
 
 Establishes a connection for the user with given ID Token, which will last until the time given with lifetime is elapsed.Getting access and id token is explained in [**Getting Access and Id Token from $KANDY$**](GetStarted.md#getting-access-and-id-token-from-$KANDY$) section in detail.

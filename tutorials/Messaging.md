@@ -296,7 +296,7 @@ The Mobile SDK provides the ability to send SMS text messages.
 
 ### Send an SMS message to a single destination
 
-Send an SMS message from a local address specified by the SMS Service within a list of available numbers to a single destination specified as the conversation participant with message content specified by OutboundMessage. An implementer should specify a MessagingCallback to handle any response whether error or successful response.
+Send an SMS message from a local address specified by the SMS Service within a list of available numbers to a single destination specified as the conversation participant with message content specified by OutboundMessage. An implementer should specify a SendMessageCallback to handle any response whether error or successful response.
 
 <!-- tabs:start -->
 
@@ -314,9 +314,10 @@ SMSConversation smsConversation = (SMSConversation) smsService.createConversatio
 String txt = "Hello world";
 OutboundMessage message = smsService.createMessage(txt);
 
-smsConversation.send(message, new MessagingCallback() {
+smsConversation.send(message, new SendMessageCallback() {
 	@Override
-	public void onSuccess() {
+	public void onSuccess(OutboundMessage message) {
+        Log.d("SMS", "Sending SMS succeeded. Message id: " + message.messageId);
 		//handle success
 	}
 
@@ -342,8 +343,9 @@ val smsConversation = smsService.createConversation(participant,localAddress)
 val txt = "Hello World"
 val message:OutboundMessage = smsService.createMessage(txt)
 
-smsConversation.send(message,object:MessagingCallback{
-    override fun onSuccess() {
+smsConversation.send(message,object:SendMessageCallback{
+    override fun onSuccess(message: OutboundMessage?) {
+        Log.d("SMS", "Sending SMS succeeded. Message id: ${message?.messageId}")
         //handle success
     }
 

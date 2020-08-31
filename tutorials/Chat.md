@@ -256,9 +256,10 @@ ChatConversation chatConversation = (ChatConversation) chatService.createConvers
 String txt = "Hello world";
 OutboundMessage message = chatService.createMessage(txt);
 
-chatConversation.send(message, new MessagingCallback() {
+chatConversation.send(message, new SendMessageCallback() {
     @Override
-    public void onSuccess() {
+    public void onSuccess(OutboundMessage message) {
+        Log.d("SMS", "Sending SMS succeeded. Message id: " + message.messageId);
         //handle success
     }
 
@@ -281,8 +282,9 @@ val chatConversation: ChatConversation = chatService.createConversation(particip
 val txt = "Hello world"
 val message:OutboundMessage = chatService.createMessage(txt)
 
-chatConversation.send(message,object:MessagingCallback{
-    override fun onSuccess() {
+chatConversation.send(message,object:SendMessageCallback{
+    override fun onSuccess(message: OutboundMessage?) {
+        Log.d("SMS", "Sending SMS succeeded. Message id: ${message?.messageId}")
         //handle success
     }
 

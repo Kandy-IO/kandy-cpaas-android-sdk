@@ -38,8 +38,8 @@ String packageNameOfTheApplication = getActivity().getPackageName();
 
 CPaaS.getPushManager().subscribe(packageNameOfTheApplication, fcmPushDeviceToken, new PushSubscriptionCallback() {
     @Override
-    public void onSuccess(String callbackUrl) {
-        Log.i("pushNotification", " Callback url " + callbackUrl);
+    public void onSuccess() {
+        Log.i("pushNotification", "Push subscription succeeded");
     }
 
     @Override
@@ -57,8 +57,8 @@ val fcmPushDeviceToken = FirebaseInstanceId.getInstance().token
 val packageNameOfTheApplication = packageName
 
 cPaaS.pushManager.subscribe(packageNameOfTheApplication,fcmPushDeviceToken,object:PushSubscriptionCallback{
-    override fun onSuccess(callbackUrl: String?) {
-        Log.i("pushNotification", " Callback url $callbackUrl")
+    override fun onSuccess() {
+        Log.i("pushNotification", "Push subscription succeeded")
     }
 
     override fun onFail(error: MobileError?) {

@@ -5,6 +5,15 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.10.0 - 2020-08-28
+
+### Added
+- Trickle ICE support `KAE-79`
+
+### Changed
+- Usage of `Conversation.send(OutboundMessage message, MessagingCallback callback)` method was changed as `void send(OutboundMessage message, SendMessageCallback callback)`
+- Usage of `PushSubscriptionCallback.onSuccess(String callbackUrl)` method was changed as `void onSuccess()`
+
 ## 2.9.0 - 2020-07-22
 
 ## 2.8.0 - 2020-07-03

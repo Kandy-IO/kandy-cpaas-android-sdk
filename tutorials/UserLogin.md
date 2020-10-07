@@ -166,7 +166,119 @@ Configuration.getInstance().logger = CustomizedLogger()
 ```
 <!-- tabs:end -->
 
-Our recommendation is to store the logs in memory and provide the ability to send them log file over e-mail to our support team if issues are encountered.
+Our recommendation is to store the logs in memory and provide the ability to send them log file over e-mail to our support team if issues are encountered.Please check our sample below.
+
+You can store logs like :
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+public class LogHelper {
+    public static File logFile;
+
+    public static void saveLog() {
+        if (isExternalStorageWritable()) {
+
+            File appDirectory = new File(Environment.getExternalStorageDirectory() + "/CPaaSDemoApp");
+            File logDirectory = new File(appDirectory + "/log");
+            LogHelper.logFile = new File(logDirectory, "CPaaSAndroidLogs" + ".txt");
+
+            // create app folder
+            if (!appDirectory.exists()) {
+                appDirectory.mkdir();
+            }
+
+            // create log folder
+            if (!logDirectory.exists()) {
+                logDirectory.mkdir();
+            }
+
+            try {
+                Process process = Runtime.getRuntime().exec("logcat -c");
+                process = Runtime.getRuntime().exec("logcat -f " + LogHelper.logFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (isExternalStorageReadable()) {
+            // only readable
+        } else {
+            // not accessible
+        }
+    }
+
+    /* Checks if external storage is available for read and write */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    /* Checks if external storage is available to at least read */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+}
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+object LogHelper {
+    var logFile: File? = null
+    
+    fun saveLog() {
+        when {
+            isExternalStorageWritable -> {
+                val appDirectory =
+                    File(Environment.getExternalStorageDirectory().toString() + "/CPaaSDemoApp")
+                val logDirectory = File("$appDirectory/log")
+                logFile = File(logDirectory, "CPaaSAndroidLogs" + ".txt")
+
+                // create app folder
+                if (!appDirectory.exists()) {
+                    appDirectory.mkdir()
+                }
+
+                // create log folder
+                if (!logDirectory.exists()) {
+                    logDirectory.mkdir()
+                }
+                try {
+                    var process = Runtime.getRuntime().exec("logcat -c")
+                    process = Runtime.getRuntime().exec("logcat -f $logFile")
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            isExternalStorageReadable -> {
+                // only readable
+            }
+            else -> {
+                // not accessible
+            }
+        }
+    }
+
+    /* Checks if external storage is available for read and write */
+    private val isExternalStorageWritable: Boolean
+        get() {
+            val state = Environment.getExternalStorageState()
+            return Environment.MEDIA_MOUNTED == state
+        }
+
+    /* Checks if external storage is available to at least read */
+    private val isExternalStorageReadable: Boolean
+        get() {
+            val state = Environment.getExternalStorageState()
+            return Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state
+        }
+}
+```
+<!-- tabs:end -->
 
 ## connect(String idToken, int lifetime, ConnectionCallback callback)
 

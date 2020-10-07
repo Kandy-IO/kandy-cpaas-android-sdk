@@ -91,7 +91,7 @@ flatDir {
 3. Add dependcy of MobileSDK to your app level **build.gradle** file with **@aar** prefix.
 
 ```groovy
-implementation 'com.kandy.mobile:kandycpaasmobilesdk:{$SDK_VERSION$}@aar'
+implementation 'com.kandy.mobile:kandycpaasmobilesdk:$SDK_VERSION$@aar'
 ```
 
 ![alt text](img/get_started_8.png "")
@@ -137,6 +137,8 @@ The following is an example using the $KANDY$ Mobile SDK in Android:
 ![alt text](img/get_started_10.png "")
 
 2. Add the following permissions to the manifest file like that sample:
+
+**WARNING:** It is application developer's responsibility to make sure the related permission is granted before it is used in order to prevent possible crashes. Namely, if developer wants to establish an audio call,she or he is supposed to check "android.permission.RECORD_AUDIO" permission is granted. If not they should not let call establish.
 
 ```xml
 <manifest xlmns:android...>

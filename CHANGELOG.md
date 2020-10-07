@@ -5,6 +5,11 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.11.0 - 2020-10-05
+
+### Changed
+- Return type of `CallInterface.getRTPStatistics` was changed as `String`
+
 ## 2.10.0 - 2020-08-28
 
 ### Added

@@ -17,6 +17,117 @@ Note that, In order to be able to call PSTN destinations, your user/project shou
 
 ## Creating Outgoing Call
 
+**WARNING:** Before creating an outgoing call, it is completely the application developer's responsibility to check if the related permissions are granted or not. If not granted, call should not be created in order to prevent crashes.
+
+For Audio Call, `android.permission.RECORD_AUDIO` permission should be granted.
+For Video Call, `android.permission.RECORD_AUDIO` and `android.permission.CAMERA` permissions should be granted.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+public class PermissionHelper{
+
+  private static int REQUEST_WRITE_STORAGE_REQUEST_CODE = 100;
+  private static String[] audioCallPermission = {Manifest.permission.RECORD_AUDIO};
+  private static String[] videoCallPermissions = {Manifest.permission.CAMERA,
+                                                    Manifest.permission.RECORD_AUDIO};
+public static boolean hasAudioCallPermission(Context context){
+        return (ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED);
+    }
+
+public static boolean hasVideoCallPermissions(Context context){
+        return (ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+    }
+public static void requestAudioCallPermission(Activity activity){
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+
+        if (hasAudioCallPermission(activity)) {
+            return;
+        }
+
+        ActivityCompat.requestPermissions(activity,
+                audioCallPermission, REQUEST_WRITE_STORAGE_REQUEST_CODE); // your request code
+    }
+
+
+public static void requestVideoCallPermissions(Activity activity){
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+
+        if (hasVideoCallPermissions(activity)) {
+            return;
+        }
+
+        ActivityCompat.requestPermissions(activity,
+                videoCallPermissions, REQUEST_WRITE_STORAGE_REQUEST_CODE); // your request code
+    }
+}    
+```
+
+```kotlin
+class PermissionHelper {
+        private val REQUEST_WRITE_STORAGE_REQUEST_CODE = 100
+        private val audioCallPermission =
+            arrayOf(Manifest.permission.RECORD_AUDIO)
+        private val videoCallPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        fun hasAudioCallPermission(context: Context): Boolean {
+            return ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun hasVideoCallPermissions(context: Context): Boolean {
+            return (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED)
+        }
+
+        fun requestAudioCallPermission(activity: Activity) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                return
+            }
+            if (hasAudioCallPermission(activity)) {
+                return
+            }
+            ActivityCompat.requestPermissions(
+                activity,
+                audioCallPermission, REQUEST_WRITE_STORAGE_REQUEST_CODE
+            ) // your request code
+        }
+
+        fun requestVideoCallPermissions(activity: Activity) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                return
+            }
+            if (hasVideoCallPermissions(activity)) {
+                return
+            }
+            ActivityCompat.requestPermissions(
+                activity,
+                videoCallPermissions, REQUEST_WRITE_STORAGE_REQUEST_CODE
+            ) // your request code
+        }
+}
+```
+
+<!-- tabs:end -->
+
 You can create **OutgoingCall** object by calling **createOutgoingCall** method in Call Service.
 
 <!-- tabs:start -->

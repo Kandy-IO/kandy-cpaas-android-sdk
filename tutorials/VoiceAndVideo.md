@@ -473,3 +473,275 @@ Please refer to [Anonymous Calls](/developer/quickstarts/rest-api/voice-and-vide
 ### Creating an Anonymous Call
 
 A server-side component is suggested to be used for logging in to $KANDY$ along with Mobile SDK for an anonymous call scenario. Once the application establishes the login, application should be able create outgoing calls using the Call Service on $KANDY$ Mobile SDK. Creating an anonymous outgoing call follows the same procedure as if it is a regular outgoing call. The main difference is an anonymous user cannot receive an incoming call, so application will not receive and incoming call notification on $KANDY$ Mobile SDK.
+
+## Advanced Usage of Call Service
+
+### Retrieve Audio and Video RTP/RTCP Statistics
+
+$KANDY$ can retrieve audio and video RTP/RTCP statistics providing information including:
+
+* Number of packets lost
+* Number of packets sent/received
+* Number of bytes sent/received
+* Call Jitter received
+* RTT (round trip delay)
+* Local/Remote network addresses and ports
+* Audio/Video codec names
+
+**Note:** $KANDY$ does not keep the statistics after the call ends.It is application developer's responsibility to keep them. Since the statistics could be too long to log due to character limitation, it is adviced to write them to a file instead of logging for further usage. You can use the following class to see how to write it to a file :
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+public class CallStatisticsHelper {
+
+    private static final String TAG = "CallStatisticsHelper";
+
+    private static File callStatisticsFile;
+
+    public static void clearFile() {
+        //clear the CPaaSAndroidCallStatistics.txt first
+        File appDirectory = new File(Environment.getExternalStorageDirectory() + "/CPaaSSDKDemoApp");
+        File statisticsDirectory = new File(appDirectory + "/statistics");
+        File statisticsFile = new File(statisticsDirectory, "CPaaSSDKAndroidCallStatistics" + ".txt");
+
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(statisticsFile);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Log.i(TAG, "Call Statistics file cleaned.");
+
+    }
+
+    public static void saveStatistics(String data) {
+        BufferedWriter bufferedWriter = null;
+        if (isExternalStorageWritable()) {
+
+            File appDirectory = new File(Environment.getExternalStorageDirectory() + "/CPaaSSDKDemoApp");
+            File statisticsDirectory = new File(appDirectory + "/statistics");
+            callStatisticsFile = new File(statisticsDirectory, "CPaaSSDKAndroidCallStatistics" + ".txt");
+
+            //create app folder
+            if (!appDirectory.exists()) {
+                appDirectory.mkdir();
+            }
+
+            //create statistics folder
+            if (!statisticsDirectory.exists()) {
+                statisticsDirectory.mkdir();
+            }
+
+            if (!callStatisticsFile.exists()) {
+                try {
+                    callStatisticsFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                FileWriter fileWriter = new FileWriter(callStatisticsFile, true);
+                bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write(data + "\n");
+                bufferedWriter.flush();
+                Log.i(TAG, "Statistics have been written to the file successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (bufferedWriter != null)
+                        bufferedWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (isExternalStorageReadable()) {
+            // only readable
+            Log.i(TAG, "External storage is not writable, it's only readable. Writing statistics to file is failed.");
+        } else {
+            //not accessible
+            LogManager.log(Constants.LogLevel.TRACE, TAG, "External storage is not accessible. Writing statistics to file is failed.");
+        }
+    }
+
+    public static File getCallStatisticsFile() {
+        return callStatisticsFile;
+    }
+
+    /* Checks if external storage is available for reading and writing */
+    private static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    /* Checks if external storage is available for at least reading */
+    private static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+}
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+object CallStatisticsHelper {
+    private const val TAG = "CallStatisticsHelper"
+    var callStatisticsFile: File? = null
+        private set
+
+    fun clearFile() {
+        //clear the CPaaSAndroidCallStatistics.txt first
+        val appDirectory = File(Environment.getExternalStorageDirectory().toString() + "/CPaaSSDKDemoApp")
+        val statisticsDirectory = File("$appDirectory/statistics")
+        val statisticsFile = File(statisticsDirectory, "CPaaSSDKAndroidCallStatistics" + ".txt")
+        val writer: PrintWriter
+        try {
+            writer = PrintWriter(statisticsFile)
+            writer.close()
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        Log.i(TAG, "Call Statistics file cleaned.")
+    }
+
+    fun saveStatistics(data: String) {
+        var bufferedWriter: BufferedWriter? = null
+        when {
+            isExternalStorageWritable -> {
+                val appDirectory = File(
+                    Environment.getExternalStorageDirectory().toString() + "/CPaaSSDKDemoApp"
+                )
+                val statisticsDirectory = File("$appDirectory/statistics")
+                callStatisticsFile = File(statisticsDirectory, "CPaaSSDKAndroidCallStatistics" + ".txt")
+
+                //create app folder
+                if (!appDirectory.exists()) {
+                    appDirectory.mkdir()
+                }
+
+                //create statistics folder
+                if (!statisticsDirectory.exists()) {
+                    statisticsDirectory.mkdir()
+                }
+                if (!callStatisticsFile!!.exists()) {
+                    try {
+                        callStatisticsFile!!.createNewFile()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+                try {
+                    val fileWriter = FileWriter(callStatisticsFile, true)
+                    bufferedWriter = BufferedWriter(fileWriter)
+                    bufferedWriter.write(data + "\n")
+                    bufferedWriter.flush()
+                    Log.i(TAG, "Statistics have been written to the file successfully.")
+                    
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } finally {
+                    try {
+                        bufferedWriter?.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            isExternalStorageReadable -> {
+                // only readable
+                Log.i(TAG, "External storage is not writable, it's only readable. Writing statistics to file is failed.")
+            }
+            else -> {
+                //not accessible
+                Log.i(TAG,"External storage is not accessible. Writing statistics to file is failed." )
+            }
+        }
+    }
+
+    /* Checks if external storage is available for reading and writing */
+    private val isExternalStorageWritable: Boolean
+        get() {
+            val state = Environment.getExternalStorageState()
+            return Environment.MEDIA_MOUNTED == state
+        }
+
+    /* Checks if external storage is available for at least reading */
+    private val isExternalStorageReadable: Boolean
+        get() {
+            val state = Environment.getExternalStorageState()
+            return Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state
+        }
+}
+```
+<!-- tabs:end -->
+
+
+Use the "getRTPStatistics" method in an Call object to retrieve a string in the JSON format containing RTP/RTCP statistics. The JSON-String includes objects of the RTCStatsReport class—a class which stores statistic details. This class has the following public variables:
+
+
+ * timestamp -- Indicates the time at which the sample was taken for this statistics object.
+ * type      -- Indicates the type of statistics the object contains. Types are listed below.
+ * id        -- Uniquely identifies the object.
+
+
+ ```javascript
+type {
+    "codec",            
+    "inbound-rtp",
+    "outbound-rtp",
+    "remote-inbound-rtp",
+    "remote-outbound-rtp",
+    "media-source",
+    "csrc",
+    "peer-connection",
+    "data-channel",
+    "stream",
+    "track",
+    "transceiver",
+    "sender",
+    "receiver",
+    "transport",
+    "sctp-transport",
+    "candidate-pair",
+    "local-candidate",
+    "remote-candidate",
+    "certificate",
+    "ice-server"
+}
+```
+
+#### Example: Retrieving statistics
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+currentCall.getRTPStatistics(new RTPStatisticsHandler() {
+    @Override
+    public void onReportReceived(String statReport) {
+       CallStatisticsHelper.saveStatistics(statReport);              
+    }
+});
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+currentCall?.getRTPStatistics {
+            CallStatisticsHelper.saveStatistics(it)
+        }
+```
+<!-- tabs:end -->
+
+
+

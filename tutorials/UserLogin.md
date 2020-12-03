@@ -86,7 +86,6 @@ import com.rbbn.cpaas.mobile.utilities.Configuration;
 import com.rbbn.cpaas.mobile.utilities.webrtc.ICEServers;
 
 Configuration configuration = Configuration.getInstance();
-configuration.setUseSecureConnection(true);
 configuration.setRestServerUrl("$KANDYFQDN$");
 
 // Setting ICE Servers
@@ -104,7 +103,6 @@ configuration.setICEServers(iceServers);
 import com.rbbn.cpaas.mobile.utilities.Configuration
 import com.rbbn.cpaas.mobile.utilities.webrtc.ICEServers
 
-Configuration.getInstance().isUseSecureConnection = true
 Configuration.getInstance().restServerUrl = "$KANDYFQDN$"
 
 //Setting ICE Servers

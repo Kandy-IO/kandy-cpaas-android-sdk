@@ -745,5 +745,87 @@ currentCall?.getRTPStatistics {
 ```
 <!-- tabs:end -->
 
+#### Ringing feedback
+
+If the receiving party prefers the information that it has successfully received the call, it can notify the calling party by the ringingFeedbackOption method. 
+
+The default value of this method is CLIENT. If you want to change this value, you must do so before registration.
+
+Possible values of the ringingFeedbackOption configuration parameter are NONE and CLIENT.
+
+- NONE: There will be no ringing feedback.
+
+- CLIENT: Client based ringing feedback.
+
+When ringingFeedbackOption is NONE, CPaaS SDK will not send ringing feedback.
+
+###### Example: Setting ringing feedback feature
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+// There will be no ringing feedback.
+Configuration.getInstance().setRingingFeedbackOption(NONE);
+// Client based ringing feedback.
+Configuration.getInstance().setRingingFeedbackOption(CLIENT);
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+// There will be no ringing feedback.
+Configuration.getInstance().setRingingFeedbackOption = NONE
+// Client based ringing feedback.
+Configuration.getInstance().setRingingFeedbackOption = CLIENT
+```
+
+<!-- tabs:end -->
+
+###### Example: Sending ringing feedback
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+@Override
+public void incomingCall(final IncomingCallInterface call) {
+    call.sendRingingFeedback();
+    // Perform actions related to the incoming call
+    // such as display alert for incoming call
+}
+
+@Override
+public void ringingFeedbackSucceeded(IncomingCallInterface call) {
+  Log.i("Call", "Send ringing feedback succeeded");
+}
+
+@Override
+public void ringingFeedbackFailed(IncomingCallInterface call, MobileError error) {
+  Log.e("Call", "Send ringing feedback failed : " + error.getErrorMessage());
+}
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+override fun incomingCall(call: IncomingCallInterface?) {
+     call?.sendRingingFeedback()
+     // Perform actions related to the incoming call
+     // such as display alert for incoming call
+}
+
+override fun ringingFeedbackSucceeded(call: IncomingCallInterface?) {
+        Log.i("Call", "Send ringing feedback succeeded")
+}
+
+override fun ringingFeedbackFailed(call: IncomingCallInterface?, error: MobileError?) {
+        Log.e("Call", "Send ringing feedback failed : " + error?.errorMessage)
+}
+```
+
+<!-- tabs:end -->
 
 

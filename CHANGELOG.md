@@ -5,6 +5,12 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.17.0 - 2021-03-26
+
+### Added
+- XCFramework support was added
+- `List<Map> getAvailableCodecs(CodecType codecType)` added to Call class in order to get available codec attributes.
+
 ## 2.16.0 - 2021-02-26
 
 ## 2.15.0 - 2021-02-04

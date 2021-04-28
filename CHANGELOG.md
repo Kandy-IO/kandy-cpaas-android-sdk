@@ -5,6 +5,8 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.18.0 - 2021-04-26
+
 ## 2.17.0 - 2021-03-26
 
 ### Added

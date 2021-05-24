@@ -20,9 +20,26 @@ CPaaS Android SDK change log.
 ### Added
 - Ringing feedback options`KAE-889` 
 
+### Fixed
+- Cannot update presence status is fixed. `KAE-907` 
+
 ## 2.14.0 - 2020-12-30
 
+### Fixed
+- PCObserver timeout crash is fixed. `KAE-820`
+- First time build issue is fixed. `KAE-812`
+- Issue while fetching messages in one-to-one chat is fixed. `KAE-870`
+- Null fields in OutboundMessage Object is fixed. `KAE-910`
+- Issue in call transfer is fixed. `KAE-883`
+
 ## 2.13.0 - 2020-12-02
+
+### Fixed
+- onFail method returns from worker thread is fixed. `KAE-803`
+- Crash on deleting group chat is fixed. `KAE-887`
+- Printing call states is fixed. `KAE-885`
+- Push unsubscribe issue is fixed. `KAE-910`
+- Notification channel unsubscribe issue is fixed. `KAE-863`
 
 ### Removed
 - `useSecureConnection`, `packageName`, `earlyMediaEnabled`, `channelLifeTime` and `DTLS` parameters removed from Configuration. `KAE-862`
@@ -31,6 +48,9 @@ CPaaS Android SDK change log.
 - `replaceCodecSet` parameter renamed as `codecPayloadTypeSet`. `KAE-862`
 
 ## 2.12.0 - 2020-11-04
+
+### Fixed
+- SMS history does not display date is fixed. `KAE-846`
 
 ## 2.11.0 - 2020-10-05
 

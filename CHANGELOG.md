@@ -5,6 +5,8 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.19.0 - 2021-06-01
+
 ## 2.18.0 - 2021-04-26
 
 ## 2.17.0 - 2021-03-26
@@ -21,7 +23,7 @@ CPaaS Android SDK change log.
 - Ringing feedback options`KAE-889` 
 
 ### Fixed
-- Cannot update presence status is fixed. `KAE-907` 
+- Cannot update presence status is fixed. `KAE-907`
 
 ## 2.14.0 - 2020-12-30
 

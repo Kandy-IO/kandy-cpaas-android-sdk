@@ -464,6 +464,25 @@ call.unMute()
 ```
 <!-- tabs:end -->
 
+#### Available Codecs
+
+To get available codec list, getAvailableCodecs method can be called. The codec type can be customized with a parameter to the getAvailableCodecs method. But only Video type is allowed for now.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+call.getAvailableCodecs(CodecType.VIDEO);
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+call.getAvailableCodecs(CodecType.VIDEO);
+```
+<!-- tabs:end -->
+
 ## Anonymous Calls
 
 $KANDY$ offers to make voice and video calls even if the application user does not have a $KANDY$ account to login. This functionality is called as Anonymous Call on $KANDY$ system. Anonymous call feature can be useful for applications such as customer service support. Since the application user does not have a $KANDY$ account, only an outgoing call can be made to a registered $KANDY$ user. An anonymous user cannot receive and incoming call with this feature.

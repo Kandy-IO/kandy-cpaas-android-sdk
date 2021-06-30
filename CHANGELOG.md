@@ -5,6 +5,11 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 2.20.0 - 2021-29-01
+
+### Fixed
+- Adding same payload of RED codec to SDP issue fixed. `KAE-982`
+
 ## 2.19.0 - 2021-06-01
 
 ## 2.18.0 - 2021-04-26

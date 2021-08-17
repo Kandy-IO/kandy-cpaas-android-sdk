@@ -5,7 +5,12 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
-## 2.20.0 - 2021-29-01
+## 2.21.0 - 2021-08-16
+
+### Added
+- JavaWebSocket version updated to 1.5.1 `KAE-647` 
+
+## 2.20.0 - 2021-06-29
 
 ### Fixed
 - Adding same payload of RED codec to SDP issue fixed. `KAE-982`

@@ -1,4 +1,4 @@
 # $KANDY$ Android SDK - User Guide
 Version Number: **$SDK_VERSION$**
 <br>
-Revision Date: **November 3, 2021**
+Revision Date: **January 3, 2022**

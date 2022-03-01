@@ -81,6 +81,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
+        CallNotificationInfo callNotificationInfo = PushInjector.parsePushNotification(remoteMessage)
+
+        // If callNotificationInfo's error field is null, It means the received message is a incoming call notification.
+        if (callNotificationInfo.error == null) {
+            // Show incoming call notification, etc.
+        }
+
         CPaaS.getPushManager().injectPushMessage(remoteMessage.getData(), new PushInjectionCallback() {
             @Override
             public void onSuccess() {
@@ -104,6 +112,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     ...
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
             super.onMessageReceived(remoteMessage)
+
+            val callNotificationInfo = PushInjector.parsePushNotification(remoteMessage)
+
+            // If callNotificationInfo's error field is null, It means the received message is a incoming call notification.
+            if (callNotificationInfo.error == null) {
+                // Show incoming call notification, etc.
+            }
+
             cPaaS.pushManager.injectPushMessage(remoteMessage.data,object:PushInjectionCallback{
                 override fun onSuccess() {
                     Log.i("FCM", "Push inject push message succeed")

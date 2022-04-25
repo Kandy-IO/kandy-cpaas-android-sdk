@@ -187,9 +187,13 @@ chatConversation.fetchMessages(object:FetchCallback<List<Message>>{
 ```
 <!-- tabs:end -->
 
-### Fetch a number of messages from the server
+### Fetch messages by criteria from the server
 
-Retrieve a list of message objects by filter from the server.
+Retrieve a list of message objects by filter from the server. You can filter messages options using FetchOptions.
+FetchOptions filter has provided filter parameters; max, lastMessageTime and isNew.
+* max: Filters the maximum number of messages according to max parameter  
+* lastMessageTime: Filters  the messages according to lastMessageTime parameter
+* isNew: Specifies message delivery status
 
 <!-- tabs:start -->
 
@@ -199,7 +203,8 @@ Retrieve a list of message objects by filter from the server.
 import com.rbbn.cpaas.mobile.messaging.api.FetchOptions;
 
 FetchOptions options = new FetchOptions();
-options.max(50);
+options.max(50); // A maximum of 10 messages will be fetched.
+options.lastMessageTime(1650619984); // Fetches the messages written after 22 April 2022  09:33:03
 
 chatConversation.fetchMessages(options, new FetchCallback<List<Message>>() {
     @Override
@@ -220,7 +225,8 @@ chatConversation.fetchMessages(options, new FetchCallback<List<Message>>() {
 import com.rbbn.cpaas.mobile.messaging.api.FetchOptions
 
 val options = FetchOptions()
-options.max(50)
+options.max(50) // A maximum of 10 messages will be fetched.
+options.lastMessageTime(1650619984) // Fetches the messages written after 22 April 2022  09:33:03
 
 chatConversation.fetchMessages(options, object:FetchCallback<List<Message>>{
     override fun onSuccess(result: FetchResult<List<Message>>?) {

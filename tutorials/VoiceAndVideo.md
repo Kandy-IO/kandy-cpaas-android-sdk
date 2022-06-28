@@ -801,15 +801,17 @@ currentCall?.getRTPStatistics {
 
 If the receiving party prefers the information that it has successfully received the call, it can notify the calling party by the ringingFeedbackOption method. 
 
-The default value of this method is CLIENT. If you want to change this value, you must do so before registration.
+The default value of this method is AUTO. If you want to change this value, you must do so before registration.
 
-Possible values of the ringingFeedbackOption configuration parameter are NONE and CLIENT.
+Possible values of the ringingFeedbackOption configuration parameter are APP and AUTO.
 
-- NONE: There will be no ringing feedback.
+The option selected during registration, cannot be changed after registration.
 
-- CLIENT: Client based ringing feedback.
+- APP: The application side should manage the ringing feedback operations
 
-When ringingFeedbackOption is NONE, CPaaS SDK will not send ringing feedback.
+- AUTO: Auto ringing feedback mechanism by SDK.
+
+When ringingFeedbackOption is APP, CPaaS SDK will not send ringing feedback.
 
 ###### Example: Setting ringing feedback feature
 
@@ -818,19 +820,19 @@ When ringingFeedbackOption is NONE, CPaaS SDK will not send ringing feedback.
 #### ** Java Code **
 
 ```java
-// There will be no ringing feedback.
-Configuration.getInstance().setRingingFeedbackOption(NONE);
-// Client based ringing feedback.
-Configuration.getInstance().setRingingFeedbackOption(CLIENT);
+// The application side should manage the ringing feedback operations
+Configuration.getInstance().setRingingFeedbackOption(APP);
+// Auto ringing feedback mechanism by SDK.
+Configuration.getInstance().setRingingFeedbackOption(AUTO);
 ```
 
 #### ** Kotlin Code **
 
 ```kotlin
-// There will be no ringing feedback.
-Configuration.getInstance().setRingingFeedbackOption = NONE
-// Client based ringing feedback.
-Configuration.getInstance().setRingingFeedbackOption = CLIENT
+// The application side should manage the ringing feedback operations
+Configuration.getInstance().setRingingFeedbackOption = APP
+// Auto ringing feedback mechanism by SDK.
+Configuration.getInstance().setRingingFeedbackOption = AUTO
 ```
 
 <!-- tabs:end -->

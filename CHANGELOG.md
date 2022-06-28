@@ -5,15 +5,12 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
-## 3.3.0 - 2022-27-05
-
-### Added
-- Added support for handling notifications with the same id. `KAE-1276`
+## 3.4.0 - 2022-28-06
 
 ### Changed
-- Ringing feedback parameters have been rearranged. 
-    - The `CLIENT` parameter has been changed to `AUTO` and the `NONE` parameter has been changed to `APP`. `KAE-1268`
-- Changed to milliseconds for messages from behind to arrive in seconds. `KAE-1289`
+ - The SDK no longer will not operate the re-register operation when it receive gone notification. `KAE-1258`
+
+## 3.3.0 - 2022-27-05
 
 ## 3.2.0 - 2022-25-04
 

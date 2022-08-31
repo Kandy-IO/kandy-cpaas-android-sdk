@@ -493,6 +493,111 @@ Please refer to [Anonymous Calls](/developer/quickstarts/rest-api/voice-and-vide
 
 A server-side component is suggested to be used for logging in to $KANDY$ along with Mobile SDK for an anonymous call scenario. Once the application establishes the login, application should be able create outgoing calls using the Call Service on $KANDY$ Mobile SDK. Creating an anonymous outgoing call follows the same procedure as if it is a regular outgoing call. The main difference is an anonymous user cannot receive an incoming call, so application will not receive and incoming call notification on $KANDY$ Mobile SDK.
 
+## Foreground Service
+
+Foreground service makes your app run in the background as if it were in the foreground. Some apps need it for example call apps. You should use foreground services in the call activity of the application you are developing using the SDK. While the foreground service is active and your app is in the background, your application continues to use resources and it can do all the things it needs to do.
+
+You should show a notification to the user when using the foreground service. The notification cannot be dismissed unless the service is either stopped or removed from the foreground.
+
+This document explains in a simple way how to use foreground services. 
+
+For more detailed information visit the [Android official website](https://developer.android.com/guide/components/foreground-services#kotlin)
+
+### Request the foreground service permission
+
+Applications targeting API 28 and later should request `FOREGOUND_SERVICE` permission as follows.
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" ...>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <application ...>
+        ...
+    </application>
+</manifest>
+```
+
+### Start a foreground service
+
+if your app wants to access camera and microphone it should specify them as follows:
+
+```xml
+<manifest>
+    ...
+    <service ... android:foregroundServiceType="microphone|camera" />
+</manifest>
+```
+
+Start the foreground service.
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+Context context = getApplicationContext();
+Intent intent = new Intent(...); // Build the intent for the service
+context.startForegroundService(intent);
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+val intent = Intent(...) // Build the intent for the service
+applicationContext.startForegroundService(intent)
+```
+<!-- tabs:end -->
+
+**Here is an example:**
+
+<!-- tabs:start -->
+
+#### ** Java Code **
+
+```java
+// If the notification supports a direct reply action, use
+// PendingIntent.FLAG_MUTABLE instead.
+Intent notificationIntent = new Intent(this, CallActivity.class);
+PendingIntent pendingIntent =
+        PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE);
+
+Notification notification =
+          new Notification.Builder(this, CHANNEL_DEFAULT_IMPORTANCE)
+    .setContentTitle(getText(R.string...))
+
+    ...
+
+    .setTicker(getText(R.string...))
+    .build();
+
+startForeground(ONGOING_NOTIFICATION_ID, notification);
+```
+
+#### ** Kotlin Code **
+
+```kotlin
+// If the notification supports a direct reply action, use
+// PendingIntent.FLAG_MUTABLE instead.
+val pendingIntent: PendingIntent =
+        Intent(this, CallActivity::class.java).let { notificationIntent ->
+            PendingIntent.getActivity(this, 0, notificationIntent,
+                    PendingIntent.FLAG_IMMUTABLE)
+        }
+
+val notification: Notification = Notification.Builder(this, CHANNEL_DEFAULT_IMPORTANCE)
+        .setContentTitle(getText(R.string...))
+
+        ...
+        
+        .setTicker(getText(R.string...))
+        .build()
+
+startForeground(ONGOING_NOTIFICATION_ID, notification)
+```
+<!-- tabs:end -->
+
 ## Advanced Usage of Call Service
 
 ### Retrieve Audio and Video RTP/RTCP Statistics

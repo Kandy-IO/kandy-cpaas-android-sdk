@@ -5,6 +5,11 @@ CPaaS Android SDK change log.
 - This project adheres to [Semantic Versioning](http://semver.org/).
 - This change log follows [keepachangelog.com](http://keepachangelog.com/) recommendations.
 
+## 3.5.0 - 2022-31-08
+
+### Fixed
+- Error while receiving call in CPaaSSDK `KAE-1253`
+
 ## 3.4.0 - 2022-28-06
 
 ### Changed
